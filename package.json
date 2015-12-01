@@ -1,0 +1,26 @@
+{
+  "name": "repaging",
+  "version": "0.0.1",
+  "description": "Crank Case Paging System",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./bin/www"
+  },
+  "author": "Raghunath Nedumpurath",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^0.4.5"
+  },
+  "dependencies": {
+    "async": "^1.5.0",
+    "body-parser": "^1.14.1",
+    "cookie-parser": "^1.4.0",
+    "debug": "^2.2.0",
+    "express": "^4.13.3",
+    "mongoose": "^4.2.8",
+    "morgan": "^1.6.1",
+    "q": "^1.4.1",
+    "serve-favicon": "^2.3.0"
+  }
+}
