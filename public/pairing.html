@@ -1,0 +1,27 @@
+<!-- Start of pairing page -->
+        <div data-role="page" id="pairing" class="ui-responsive-panel">
+
+            <div data-role="header">
+                <a href="#nav_panel"   data-icon="bars" data-iconpos="notext">Menu</a>
+                <h1>CrankCase Pairing</h1>
+            </div><!-- /header -->
+
+            <div data-role="content">   
+                <form>
+                    <label for='pairing_crank_case'>Crank Case</label>
+                    <input type='text' id='pairing_crank_case' name='crank_case'>
+                    <label for='pairing_beeper'>Buzzer ID</label>
+                    <input type='text' id='pairing_beeper' name='beeper'>
+                    <button id='pair_button'>Pair</button>
+                    <button>Cancel</button>
+                </form>
+            </div><!-- /content -->
+
+            <div data-role="footer">
+                <h4>RE CrankCase Pairing System</h4>
+            </div><!-- /footer -->
+            <div data-role="popup" id="popupPairing">
+                <p>The crankcase is paired with the buzzer</p>
+            </div>
+ 
+        </div><!-- /page -->   

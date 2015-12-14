@@ -14,7 +14,11 @@ router.post('/pair', function(req, res, next) {
     function successHandler(result) {
         debug('successfully inserted pair ' + 'crank case :' + result.crankCase + ' beeper : ' + result.beeper );
         debug(result);
-        return res.sendStatus(200)
+        var response = {};
+        response.status = 1;
+        response.message = 'Crankcase is paired with the buzzer';
+        response.data = result;
+        return res.status(200).json(response);
     }
     function errorHandler(error) {
         debug('error in saving pair');
@@ -22,7 +26,13 @@ router.post('/pair', function(req, res, next) {
         if (error.name === 'MongoError' && error.code === 11000) {
         // Duplicate crank case or beeper
             debug('duplicate entry');
-            return res.status(500).send({ succes: false, message: 'record already exist!' });
+            var response = {};
+            response.status = 0;
+            response.message = 'Either crankcase or buzzer already paired';
+            response.data = error;
+            debug(response);
+            return res.status(200).json(response);
+            //return res.status(500).send({ succes: false, message: 'record already exist!' });
         }
         return next(error);
     }
