@@ -1,5 +1,6 @@
 'use strict';
 var express = require('express'); 
+var debug = require('debug')('example-server');
 var path = require('path'); 
 var favicon = require('serve-favicon'); 
 var logger = require('morgan'); 
@@ -35,10 +36,14 @@ app.use(function(req, res, next) {  var err = new Error('Not Found');
 // development error handler // will print stacktrace 
 if (app.get('env') === 'development') {  
     app.use(function(err, req, res, next) {    
+        debug('in express error handler development');
         res.status(err.status || 500);    
         res.send({ message: err.message,      error: err    });
     }); 
 }
 // production error handler // no stacktraces leaked to user 
-app.use(function(err, req, res, next) {  res.status(err.status || 500); });
+app.use(function(err, req, res, next) {  
+    debug('in express error handler production');
+    res.status(err.status || 500); 
+});
 module.exports = app;
