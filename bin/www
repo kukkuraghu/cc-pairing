@@ -1,8 +1,13 @@
 'use strict'
 var debug = require('debug')('example-server'); 
+var server_ip = process.env.server_ip;
+var server_port = process.env.server_port;
+server_port = server_port || 8080;
 var app = require('../');
-app.set('port', process.env.PORT || 8080);
-var server = app.listen(app.get('port'), function() {  
-    console.log('Express server listening on port ' + server.address().port);
+app.set('host', server_ip);
+app.set('port', server_port);
+debug('port :' + app.get('port') + ' host : ' + app.get('host'));
+var server = app.listen(app.get('port'),  app.get('host'), function() {  
+    console.log('Express server listening on port ' + server.address().port + ' Host : ' + server.address().address);
     //debug('Express server listening on port ' + server.address().port); 
 });

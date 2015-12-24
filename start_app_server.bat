@@ -1,0 +1,9 @@
+start  start_db.bat
+set NODE_ENV=development
+set debug=example-server
+set db_ip=localhost
+set db_Port=27017
+set db_name=recrankcasedb
+set server_ip=127.0.0.1
+set server_port=8080
+node bin/www

@@ -1,0 +1,1 @@
+mongod --dbpath "C:\Users\raghu\Documents\Comorin\RE Project\Development\db"

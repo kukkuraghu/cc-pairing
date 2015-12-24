@@ -59,7 +59,7 @@
 #crankCase_grid {
     border : 0px;
 }
-#unpairing_crankCase_div, #unpairing_pager_div{
+#unpairing_crankCase_div, #unpairing_pager_div, #paging_crankCase_div {
     width : 80%;
 }
 #get_buzzer_div, #get_crankcase_div {
