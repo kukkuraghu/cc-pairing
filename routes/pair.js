@@ -73,7 +73,7 @@ router.post('/unpairall', function(req, res, next) {
         debug(result);
         var response = {};
         response.status = 1;
-        response.message = 'All pairings removed';
+        response.message = 'All pairs removed';
         response.data = JSON.parse(JSON.stringify(result));
         debug(response.data);
         return res.status(200).json(response);

@@ -7,6 +7,7 @@ function registerLoginPageFunctions() {
     $('#login_button').click(function(event) {
         event.preventDefault();
         //disbale the buttons on the screen before making the ajax call
+        $('#login_form').validate();
         $("button").attr("disabled", true); 
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         console.log(urlDetails.domain);
@@ -67,6 +68,7 @@ $( document ).delegate("#unpairing", "pageinit", function() {
 });
 
 function registerPairingPageFunctions() {
+    console.log('inside registerPairingPageFunctions');
     loadLeftPanel('pairing');
     
     $('#pair_button').click(function(event) {
@@ -277,9 +279,9 @@ function registerPagingPageFunctions(){
 
 function registerUnpairingPageFunctions(){ 
     console.log('in registerUnpairingPageFunctions');
+    loadLeftPanel('unpairing');
     //hide the unpair button initially
     $('#unpair_button').hide();
-    loadLeftPanel('paging');
     $('#get_crankcase').click(function(event) {
         event.preventDefault();
         $('#unpairing_crank_case').val('');//clear the pager data, if it is already there
@@ -411,9 +413,10 @@ function registerUnpairingPageFunctions(){
         console.log('inside unpairall handler')
         event.preventDefault();
         $('#message_div').hide();
-        //TO DO - Add a confirmation dialog
-        //$.mobile.changePage('unpairall_dialog.html', {transition: 'pop', role: 'dialog'});  
-        //$.mobile.pageContainer.pagecontainer("change", "login.html"); 
+        confirmDialog('Remove all pairs?');
+    });
+    
+    $(document).on('unpair:all', function() {
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         var loginUrl = urlDetails.domain + '/unpairall';
         console.log(loginUrl);
@@ -474,10 +477,10 @@ function registerUnpairingPageFunctions(){
 function loadLeftPanel(containerID) {
     $.get('left-panel.html', function(data) { 
             console.log('loading left-panel.html');
-            //$('#pairing').append(data);
-            $('#' + containerID).append(data);
-            //$.mobile.pageContainer.prepend(data);
+            var pageID = '#' + containerID;
+            $(pageID).append(data);
             $("[data-role=panel]").panel().enhanceWithin(); 
+            $(pageID + ' [data-role=panel] li').filter(pageID + '_page').remove();
         }, 'html');
 }
 
@@ -496,4 +499,23 @@ function showPopup(popupMessage) {
     $('#popup_id p').text(popupMessage);
     $('#popup_id').popup('open');
     setTimeout(function(){$('#popup_id').popup('close');}, 2000);
+}
+
+function confirmDialog(text, callback) {
+    console.log('inside confirmDialog');
+    var popupDialogObj = $('#popupDialog');
+    popupDialogObj.popup({
+        afterclose: function (event, ui) {
+            popupDialogObj.find(".optionConfirm").first().off('click');
+            var isConfirmed = popupDialogObj.attr('data-confirmed') === 'yes' ? true : false;
+            if (isConfirmed) {
+                popupDialogObj.attr('data-confirmed', 'no');
+                $(document).trigger( 'unpair:all');
+            }
+        }
+    });
+    popupDialogObj.popup('open');
+    popupDialogObj.find(".optionConfirm").first().on('click', function () {
+        popupDialogObj.attr('data-confirmed', 'yes');
+    });
 }

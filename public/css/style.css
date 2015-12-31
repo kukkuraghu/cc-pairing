@@ -43,12 +43,12 @@
 }
 
 #xyz .ui-controlgroup-controls .ui-input-text{
-    width: 80%;
+    width: 75%;
     box-sizing: border-box;
 }
 
 #xyz .ui-controlgroup-controls #get_buzzer{
-    width: 20%;
+    width: 25%;
     box-sizing: border-box;
 }
 
@@ -60,13 +60,19 @@
     border : 0px;
 }
 #unpairing_crankCase_div, #unpairing_pager_div, #paging_crankCase_div {
-    width : 80%;
+    width : 75%;
 }
 #get_buzzer_div, #get_crankcase_div {
-    width : 20%;
+    width : 25%;
 }
 
 #get_buzzer, #get_crankcase {
     padding : 0px;
     height : 35.188px;
 }
+
+#unpairing_pager_grid {
+    border : 0px;
+}
+
+
