@@ -1,4 +1,3 @@
-
 $( document ).ready(function() {
     $.mobile.pageContainer.pagecontainer("change", "login.html");
 });
@@ -6,8 +5,17 @@ function registerLoginPageFunctions() {
     console.log('inside registerLoginPageFunctions');
     $('#login_button').click(function(event) {
         event.preventDefault();
+        if (!($('#user_name').val())) {
+            showMessage('Enter a valid user name');
+            $('#user_name').focus();
+            return false;
+        }
+        if (!($('#password').val())) {
+            showMessage('Enter valid password');
+            $('#password').focus();
+            return false;
+        }
         //disbale the buttons on the screen before making the ajax call
-        $('#login_form').validate();
         $("button").attr("disabled", true); 
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         console.log(urlDetails.domain);
@@ -66,7 +74,19 @@ $( document ).delegate("#paging", "pageinit", function() {
 $( document ).delegate("#unpairing", "pageinit", function() {
   registerUnpairingPageFunctions();
 });
-
+/*
+TO DO - use jQuery validation plugin to validate forms
+$(document).on("pageshow", "#login", function() {
+    $('#login_form').validate({
+        submitHandler : function(event, validator) {
+            console.log('the form is valid');
+        },
+        invalidHandler : function(event, validator) {
+            console.log('the form is invalid');
+        }
+    });
+});
+*/
 function registerPairingPageFunctions() {
     console.log('inside registerPairingPageFunctions');
     loadLeftPanel('pairing');
@@ -145,6 +165,17 @@ function registerPagingPageFunctions(){
     loadLeftPanel('paging');
     $('#page_button').click(function(event) {
         event.preventDefault();
+        $('#message_div').hide();   
+        if (!($('#paging_crank_case').val())) {
+            showMessage('A valid crankcase entry required');
+            $('#paging_crank_case').focus();
+            return false;
+        }
+        if (!($('#paging_pager').val())) {
+            showMessage('A valid beeper ID required');
+            $('#paging_pager').focus();
+            return false;
+        }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         console.log(urlDetails.domain);
         var loginUrl = urlDetails.domain + '/page/' + $('#paging_crank_case').val();
@@ -178,6 +209,12 @@ function registerPagingPageFunctions(){
     });
     $('#get_buzzer').click(function(event) {
         event.preventDefault();
+        $('#message_div').hide();
+        if (!($('#paging_crank_case').val())) {
+            showMessage('A valid crankcase entry required');
+            $('#paging_crank_case').focus();
+            return false;
+        }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         console.log(urlDetails.domain);
         var loginUrl = urlDetails.domain + '/page/' + $('#paging_crank_case').val();
@@ -220,6 +257,16 @@ function registerPagingPageFunctions(){
     $('#unpair_button').click(function(event) {
         event.preventDefault();
         $('#message_div').hide();
+        if (!($('#unpairing_crank_case').val())) {
+            showMessage('A valid crankcase entry required');
+            $('#unpairing_crank_case').focus();
+            return false;
+        }
+        if (!($('#unpairing_pager').val())) {
+            showMessage('A valid beeper ID required');
+            $('#unpairing_pager').focus();
+            return false;
+        }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         var loginUrl = urlDetails.domain + '/unpair/' + $('#paging_crank_case').val() + '/' + $('#paging_pager').val();
         console.log('crank case :' + $('#paging_crank_case').val());
@@ -287,6 +334,11 @@ function registerUnpairingPageFunctions(){
         $('#unpairing_crank_case').val('');//clear the pager data, if it is already there
         hideMessage();//hide the message, if it is there.
         $('#unpair_button').hide();
+        if (!($('#unpairing_pager').val())) {
+            showMessage('A valid buzzer ID required');
+            $('#unpairing_pager').focus();
+            return false;
+        }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         console.log(urlDetails.domain);
         var loginUrl = urlDetails.domain + '/get_crankcase/' + $('#unpairing_pager').val();
@@ -324,11 +376,16 @@ function registerUnpairingPageFunctions(){
             }
         });         
     });
-    $('#get_buzzer').click(function(event) {
+    $('#get_unpair_buzzer').click(function(event) {
         event.preventDefault();
         $('#unpairing_pager').val('');//clear the pager data, if it is already there
         hideMessage();//hide the message, if it is there.
         $('#unpair_button').hide();
+        if (!($('#unpairing_crank_case').val())) {
+            showMessage('A valid crankCase label required');
+            $('#unpairing_crank_case').focus();
+            return false;
+        }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         console.log(urlDetails.domain);
         var loginUrl = urlDetails.domain + '/get_pager/' + $('#unpairing_crank_case').val();
@@ -369,6 +426,16 @@ function registerUnpairingPageFunctions(){
     $('#unpair_button').click(function(event) {
         event.preventDefault();
         $('#message_div').hide();
+        if (!($('#unpairing_pager').val())) {
+            showMessage('A valid buzzer ID required');
+            $('#unpairing_pager').focus();
+            return false;
+        }
+        if (!($('#unpairing_crank_case').val())) {
+            showMessage('A valid crankCase label required');
+            $('#unpairing_crank_case').focus();
+            return false;
+        }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         var loginUrl = urlDetails.domain + '/unpair/' + $('#unpairing_crank_case').val() + '/' + $('#unpairing_pager').val();
         console.log('crank case :' + $('#unpairing_crank_case').val());

@@ -40,28 +40,60 @@ router.post('/pair', function(req, res, next) {
 
 router.post('/unpair/:crankcase/:beeper', function(req, res, next) { 
     debug('express POST request route unpair ' + 'crankCase :' + req.body.crankCase + ' beeperId :' + req.body.beeper);
-    var unpairPromise = pairServices.unpair(req.body.crankCase, req.body.beeper);
-    unpairPromise.then(successHandler, errorHandler);
-    function successHandler(result) {
-        debug('successfully unpaired');
-        debug(result);
+    var getBeeperPromise = pairServices.getMatchingBeeper(req.body.crankCase);
+    getBeeperPromise.then(beeperSuccess, beeperFailure);
+    function beeperSuccess(data) {
         var response = {};
-        response.status = 1;
-        response.message = 'Crankcase unpaired from the buzzer';
-        response.data = JSON.parse(JSON.stringify(result));
-        debug(response.data);
-        return res.status(200).json(response);
+        debug('router unpair, function beeperSuccess, data : ' + data);
+        if (data) {
+            if (data.beeper === req.body.beeper) {
+                debug('router unpair, function beeperSuccess, beeper matches with crankcase')
+                unpair();    
+            }
+            else {
+                debug('router unpair, function beeperSuccess, beeper does not matche with crankcase')
+                response.status = 0;
+                response.message = 'Matching pair not found';
+                return res.status(200).json(response);
+            }
+        }
+        else {
+            response.status = 0;
+            response.message = 'Matching pair not found';
+            return res.status(200).json(response);
+        }
     }
-    function errorHandler(error) {
-        debug('error in unpairing');
-        debug(error); 
-        var response = {};
-        response.status = 0;
-        response.message = 'Unpairing unsuccessful';
-        response.data = error;
-        debug(response);
-        return res.status(200).json(response);
+    function beeperFailure(error) {
+        debug('route page get_pager error : ' + error);
+        res.sendStatus(500);
     }
+    function unpair() {
+        var unpairPromise = pairServices.unpair(req.body.crankCase, req.body.beeper);
+        unpairPromise.then(successHandler, errorHandler);
+        function successHandler(result) {
+            debug('successfully unpaired');
+            //debug(result);
+            var response = {};
+            response.status = 1;
+            response.message = 'Crankcase unpaired from the buzzer';
+            response.data = JSON.parse(JSON.stringify(result));
+            debug(response.data);
+            return res.status(200).json(response);
+        }
+        function errorHandler(error) {
+            debug('error in unpairing');
+            debug(error); 
+            var response = {};
+            response.status = 0;
+            response.message = 'Unpairing unsuccessful';
+            response.data = error;
+            debug(response);
+            return res.status(200).json(response);
+        }    
+    }
+
+
+    
 });
 
 router.post('/unpairall', function(req, res, next) { 
