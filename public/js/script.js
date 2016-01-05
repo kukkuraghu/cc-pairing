@@ -1,3 +1,4 @@
+var user = {};
 $( document ).ready(function() {
     $.mobile.pageContainer.pagecontainer("change", "login.html");
 });
@@ -43,7 +44,13 @@ function registerLoginPageFunctions() {
                     $('#user_name').focus();
                 } 
                 else {
-                    $.mobile.pageContainer.pagecontainer("change", "pairing.html");
+                    user.password = result.data.password;
+                    user.username = result.data.username;
+                    user.role = result.data.role;
+                    user.plant = result.data.plant;
+                    user.screen = result.data.screen || 'pairing';//if the default screen is available, use that otherwise make pairing as the default screeen.
+                    (user.screen === 'pairing') ? $.mobile.pageContainer.pagecontainer("change", "pairing.html") : $.mobile.pageContainer.pagecontainer("change", "paging.html");
+                    //$.mobile.pageContainer.pagecontainer("change", "pairing.html");
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -73,6 +80,18 @@ $( document ).delegate("#paging", "pageinit", function() {
 
 $( document ).delegate("#unpairing", "pageinit", function() {
   registerUnpairingPageFunctions();
+});
+$( document ).delegate("#maintenance", "pageinit", function() {
+  registerMaintenancePageFunctions();
+});
+$( document ).delegate("#change_password", "pageinit", function() {
+  registerChangePasswordPageFunctions();
+});
+$( document ).delegate("#add_user", "pageinit", function() {
+  registerAddUserPageFunctions();
+});
+$( document ).delegate("#modify_user", "pageinit", function() {
+  registerModifyUserPageFunctions();
 });
 /*
 TO DO - use jQuery validation plugin to validate forms
@@ -113,7 +132,7 @@ function registerPairingPageFunctions() {
             url: loginUrl,
             async: true,
             method:'POST',
-            data : {crankCase : $('#pairing_crank_case').val(), beeper : $('#pairing_beeper').val()},
+            data : {crankCase : $('#pairing_crank_case').val(), beeper : $('#pairing_beeper').val(), user : user.username},
             beforeSend: function() {
                 $.mobile.loading('show');
             },
@@ -509,7 +528,7 @@ function registerUnpairingPageFunctions(){
                 }
                 else {
                     //Unpairing was not successful
-                    console.log('Unpairing was not successful');
+                    console.log('Unpairing failed');
                     console.log(result);
                     showMessage(result.message);
                 } 
@@ -529,16 +548,339 @@ function registerUnpairingPageFunctions(){
         $('#message_div').hide();
     });
 
-    $('#page_cancel_button').click(function(event) {
+    $('#unpair_cancel_button').click(function(event) {
         event.preventDefault();
-        $('#message_div').hide();
-        $('#paging_pager_div').hide();
-        $('#custom_fieldset_buttons').hide();
-        $('#paging_crank_case').val('');
-        $('#paging_crank_case').focus();
+        hideMessage();
+        $('#unpairing_crank_case').val('');
+        $('#unpairing_pager').val('');
+        $('#unpair_button').hide();
+        $('#unpairing_pager').focus();
     });
     
 }
+
+function registerMaintenancePageFunctions() {
+    console.log('inside registerMaintenancePageFunctions');
+
+    loadLeftPanel('maintenance');
+
+    //modify user and add user options are availabe for admin only
+    if (user.role !== 'admin') {
+        $('#modify_user_button').hide();
+        $('#add_user_button').hide();
+    }
+    
+    $('#change_password_button').click(function(event) {
+        event.preventDefault();
+        console.log('change_password_button clicked');
+        $.mobile.pageContainer.pagecontainer("change", "change_password.html");
+    });
+    $('#modify_user_button').click(function(event) {
+        event.preventDefault();
+        console.log('update_user_button clicked');
+        $.mobile.pageContainer.pagecontainer("change", "modify_user.html");
+    });
+    $('#add_user_button').click(function(event) {
+        event.preventDefault();
+        console.log('add_user_button clicked');
+        $.mobile.pageContainer.pagecontainer("change", "add_user.html");
+    });
+}
+function registerChangePasswordPageFunctions() {
+    console.log('inside registerChangePasswordPageFunctions');
+    loadLeftPanel('change_password');
+    $('#cp_username').val(user.username);
+    
+    $('#cp_button').click(function(event) {
+        event.preventDefault();
+        console.log('current password :' + $('#cp_current_password').val());
+        console.log('new password:' + $('#cp_new_password').val());
+        console.log('new password repeat:' + $('#cp_new2_password').val());
+        if (!($('#cp_current_password').val())) {
+            showMessage('Please enter current password');
+            $('#cp_current_password').focus();
+            return false;
+        }
+        if (!($('#cp_new_password').val())) {
+            showMessage('New Password can not be blank');
+            $('#cp_new_password').focus();
+            return false;
+        }
+        if ( $('#cp_new2_password').val() !== $('#cp_new_password').val() ) {
+            showMessage('New passwords should be same');
+            $('#cp_new2_password').focus();
+            return false;
+        }
+        var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
+        console.log(urlDetails.domain);
+        var loginUrl = urlDetails.domain + '/cp';
+        
+        $.ajax({
+            url: loginUrl,
+            async: true,
+            method:'POST',
+            data : {username : user.username, cp : $('#cp_current_password').val(), np : $('#cp_new_password').val()},
+            beforeSend: function() {
+                $.mobile.loading('show');
+            },
+            complete: function() {
+                $.mobile.loading('hide');
+            },
+            success: function (result) {
+                console.log(result);
+                //showPopup(result.message);
+                
+                if (result.status) {
+                    showMessage(result.message, 'green');
+                    $('#cp_current_password').val('');
+                    $('#cp_new_password').val('');
+                    $('#cp_new2_password').val('');
+                    $('#cp_current_password').focus();
+                } 
+                else {
+                    showMessage(result.message);
+                    $('#cp_current_password').focus();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log('Network error has occurred please try again!');
+                showMessage(errorThrown);
+            }
+        });         
+    });
+    $('#cp_cancel_button').click(function(event) {
+        event.preventDefault();
+        $('#message_div').hide();
+        $('#cp_current_password').val('');
+        $('#cp_new_password').val('');
+        $('#cp_new2_password').val('');
+        $('#cp_current_password').focus();
+    });
+
+    //hide error message when any of the form fields is modified
+    $('#change_passsword_form').on('input', function() {
+        $('#message_div').hide();
+    });
+}
+
+function registerAddUserPageFunctions() {
+    console.log('inside registerAddUserPageFunctions');
+    loadLeftPanel('add_user');
+    
+    $('#au_add_button').click(function(event) {
+        event.preventDefault();
+        console.log('user name :' + $('#au_username').val());
+        console.log('password:' + $('#au_password').val());
+        console.log('plant' + $('#au_plant').val());
+        console.log('role : ' + $("input[name=role-choice]:checked").val());
+        console.log('role : ' + $("input[name=screen-choice]:checked").val());
+        if (!($('#au_username').val())) {
+            showMessage('Please enter user name');
+            $('#au_username').focus();
+            return false;
+        }
+        if (!($('#au_password').val())) {
+            showMessage('Please enter password');
+            $('#au_password').focus();
+            return false;
+        }
+        var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
+        console.log(urlDetails.domain);
+        var loginUrl = urlDetails.domain + '/add_user';
+        
+        $.ajax({
+            url: loginUrl,
+            async: true,
+            method:'POST',
+            data : {username : $('#au_username').val(), password : $('#au_password').val(), plant : $('#au_plant').val(), role : $("input[name=role-choice]:checked").val(), screen : $("input[name=screen-choice]:checked").val()},
+            beforeSend: function() {
+                $.mobile.loading('show');
+            },
+            complete: function() {
+                $.mobile.loading('hide');
+            },
+            success: function (result) {
+                console.log(result);
+                //showPopup(result.message);
+                
+                if (result.status) {
+                    showMessage(result.message, 'green');
+                    $('#au_username').val('');
+                    $('#au_password').val('');
+                    $('#au_plant').val('');
+                    $('#regular-role').prop('checked', true);
+                    $('input[type="radio"]').checkboxradio('refresh');
+                    //$('#admin-role').prop('checked', false).checkboxradio("refresh");
+                    //$('#admin-role').attr('checked', false);
+                    $('#au_username').focus();
+                } 
+                else {
+                    showMessage(result.message);
+                    $('#au_username').focus();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log('Network error has occurred please try again!');
+                showMessage(errorThrown);
+            }
+        });         
+    });
+    $('#au_cancel_button').click(function(event) {
+        event.preventDefault();
+        $('#message_div').hide();
+        $('#au_username').val('');
+        $('#au_password').val('');
+        $('#au_plant').val('');
+        $('#regular-role').prop('checked', true);
+        $('input[type="radio"]').checkboxradio('refresh');
+        $('#au_username').focus();
+    });
+
+    //hide error message when any of the form fields is modified
+    $('#add_user_form').on('input', function() {
+        $('#message_div').hide();
+    });
+}
+
+function registerModifyUserPageFunctions() {
+    console.log('inside registerModifyUserPageFunctions');
+    loadLeftPanel('modify_user');
+    
+    $('#get_user_detail_button').click(function(event) {
+        event.preventDefault();
+        console.log('user name :' + $('#mu_username').val());
+        if (!($('#mu_username').val())) {
+            showMessage('Please enter a user name');
+            $('#mu_username').focus();
+            return false;
+        }
+        var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
+        console.log(urlDetails.domain);
+        var loginUrl = urlDetails.domain + '/get_user';
+        
+        $.ajax({
+            url: loginUrl,
+            async: true,
+            method:'POST',
+            data : {username : $('#mu_username').val()},
+            beforeSend: function() {
+                $.mobile.loading('show');
+            },
+            complete: function() {
+                $.mobile.loading('hide');
+            },
+            success: function (result) {
+                console.log(result);
+                //showPopup(result.message);
+                
+                if (result.status) {
+                    showMessage(result.message, 'green');
+                    $('#mu_username').prop('disabled', true);
+                    $('#mu_password').val(result.data.password);
+                    $('#mu_plant').val(result.data.plant);
+                    if (result.data.role) {
+                        console.log('input[name="mu-role-choice"][value="'+result.data.role+'"]');
+                        $('input[name="mu-role-choice"][value="'+result.data.role+'"]').prop('checked', true);
+                        $('input[type="radio"]').checkboxradio('refresh');
+                    }
+                    if (result.data.screen) {
+                        console.log('input[name="mu-role-choice"][value="'+result.data.screen+'"]');
+                        $('input[name="mu-screen-choice"][value="'+result.data.screen+'"]').prop('checked', true);
+                        $('input[type="radio"]').checkboxradio('refresh');
+                    }
+                    $('#mu_user_detail_id').show();
+                    $('#mu_modify_button').show();
+                    $('#mu_plant').focus();
+                } 
+                else {
+                    showMessage(result.message);
+                    $('#mu_username').focus();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log('Network error has occurred please try again!');
+                showMessage(errorThrown);
+            }
+        });         
+    });
+    $('#mu_modify_button').click(function(event) {
+        event.preventDefault();
+        if (!($('#mu_password').val())) {
+            showMessage('Please enter a password');
+            $('#mu_password').focus();
+            return false;
+        }
+        var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
+        console.log(urlDetails.domain);
+        var loginUrl = urlDetails.domain + '/modify_user';
+        
+        $.ajax({
+            url: loginUrl,
+            async: true,
+            method:'POST',
+            data : {username : $('#mu_username').val(), password : $('#mu_password').val(), plant : $('#mu_plant').val(), role : $("input[name=mu-role-choice]:checked").val(), screen : $("input[name=mu-screen-choice]:checked").val()},
+            beforeSend: function() {
+                $.mobile.loading('show');
+            },
+            complete: function() {
+                $.mobile.loading('hide');
+            },
+            success: function (result) {
+                console.log(result);
+                if (result.status) {
+                    showMessage(result.message, 'green');
+                    $('#mu_user_detail_id').hide();
+                    $('#mu_modify_button').hide();
+                    $('#mu_username').prop('disabled', false);
+                    $('#mu_username').val('');
+                    $('#mu_password').val('');
+                    $('#mu_plant').val('');
+                    $('input[name="mu-role-choice"][value="regular"]').prop('checked', true);
+                    $('input[name="mu-screen-choice"][value="pairing"]').prop('checked', true);
+                    $('input[type="radio"]').checkboxradio('refresh');
+                    $('#mu_username').focus();
+                } 
+                else {
+                    showMessage(result.message);
+                    $('#mu_plant').focus();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log('Network error has occurred please try again!');
+                showMessage(errorThrown);
+            }
+        });         
+    });
+
+    $('#mu_cancel_button').click(function(event) {
+        event.preventDefault();
+        $('#message_div').hide();
+        $('#mu_user_detail_id').hide();
+        $('#mu_modify_button').hide();
+        $('#mu_username').prop('disabled', false);
+        $('#mu_username').val('');
+        $('#mu_password').val('');
+        $('#mu_plant').val('');
+        $('input[name="mu-role-choice"][value="regular"]').prop('checked', true);
+        $('input[name="mu-screen-choice"][value="pairing"]').prop('checked', true);
+        $('input[type="radio"]').checkboxradio('refresh');
+        $('#mu_username').focus();
+    });
+
+    //hide error message when any of the form fields is modified
+    $('#modify_user_form').on('input', function() {
+        $('#message_div').hide();
+    });
+}
+
 
 
 function loadLeftPanel(containerID) {

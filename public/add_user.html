@@ -1,0 +1,79 @@
+<!-- Start of add user page -->
+        <div data-role="page" id="add_user">
+            <div data-role="header">
+                <a href="#nav_panel"   data-icon="bars" data-iconpos="notext">Menu</a>
+                <h1>Add User</h1>
+            </div><!-- /header -->
+
+            <div data-role="content">   
+                <form id='add_user_form'>
+                    <label for='au_username' id='au_username_label'>User Name</label>
+                    <div id='au_user_div'>
+                        <input type='text' id='au_username' name='au_username' autofocus>
+                    </div>
+
+                    <label for='au_password' id='au_password_label'>Password</label>
+                    <div id='au_password_div'>
+                        <input type='text' id='au_password' name='au_password'>
+                    </div>
+
+                    <label for='au_plant' id='au_plant_label'>Plant</label>
+                    <div id='au_plant_div'>
+                        <input type='text' id='au_plant' name='au_plant'>
+                    </div>
+
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        <legend>Role</legend>
+                            <input type="radio" name="role-choice" id="regular-role" value="regular" checked/>
+                            <label for="regular-role">Regular</label>
+
+                            <input type="radio" name="role-choice" id="admin-role" value="admin"  />
+                            <label for="admin-role">Admin</label>
+                    </fieldset>
+
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        <legend>Default Screen</legend>
+                            <input type="radio" name="screen-choice" id="pairing-screen" value="pairing" checked/>
+                            <label for="pairing-screen">Pairing</label>
+
+                            <input type="radio" name="screen-choice" id="paging-screen" value="paging"  />
+                            <label for="paging-screen">Paging</label>
+                    </fieldset>
+
+
+                    <div id='message_div' style='display:none'>
+                        <p></p>
+                    </div>
+                    <button id='au_add_button'>Add</button>
+                    <button id='au_cancel_button'>Cancel</button>
+                </form>
+                
+            </div><!-- /content -->
+
+
+
+            <div data-role="footer">
+                <h4>RE CrankCase Pairing System</h4>
+            </div><!-- /footer -->
+
+            <div data-role="popup" id="popupDialog" data-confirmed="no" data-transition="pop" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:500px;width:215px">
+                <div data-role="header" data-theme="a">
+                    <h1>Unpair All?</h1>
+                </div>
+                <div role="main" class="ui-content">
+                    <h3 class="ui-title">  Remove All Pairs? </h3>
+                    <div class='ui-grid-a'>
+                        <div class='ui-block-a'>
+                            <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b optionConfirm" data-rel="back">Yes</a>
+                        </div>
+                        <div class='ui-block-b'>
+                            <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b optionCancel" data-rel="back" data-transition="flow">No</a>
+                        <div>
+                    </div>
+                </div>
+            </div>
+            <div data-role="popup" id="popup_id">
+                <p>The crankcase is paired with the buzzer</p>
+            </div>
+
+        </div><!-- /page -->      

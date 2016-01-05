@@ -56,22 +56,19 @@
     color : red;
 }
 
-#crankCase_grid {
-    border : 0px;
-}
-#unpairing_crankCase_div, #unpairing_pager_div, #paging_crankCase_div {
+#unpairing_crankCase_div, #unpairing_pager_div, #paging_crankCase_div, #mu_user_div {
     width : 75%;
 }
-#get_buzzer_div, #get_crankcase_div {
+#get_buzzer_div, #get_crankcase_div, #get_unpair_buzzer_div, #get_user_detail_div {
     width : 25%;
 }
 
-#get_buzzer, #get_crankcase {
+#get_buzzer, #get_crankcase, #get_unpair_buzzer, #get_user_detail_button {
     padding : 0px;
     height : 35.188px;
 }
 
-#unpairing_pager_grid {
+#crankCase_grid, #unpairing_pager_grid, #mu_username_grid {
     border : 0px;
 }
 

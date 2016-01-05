@@ -8,8 +8,8 @@ var pairServices = require('../lib/pairs');
 var router = express.Router();
 
 router.post('/pair', function(req, res, next) { 
-    debug('express POST request route pair ' + 'crankCase :' + req.body.crankCase + ' beeperId :' + req.body.beeper);
-    var pairCreationPromise = pairServices.addPair(req.body.crankCase, req.body.beeper);
+    debug('express POST request route pair ' + 'crankCase :' + req.body.crankCase + ' beeperId :' + req.body.beeper + ' paired by : ' + req.body.user);
+    var pairCreationPromise = pairServices.addPair(req.body.crankCase, req.body.beeper, req.body.user);
     pairCreationPromise.then(successHandler, errorHandler);
     function successHandler(result) {
         debug('successfully inserted pair ' + 'crank case :' + result.crankCase + ' beeper : ' + result.beeper );
