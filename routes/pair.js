@@ -146,4 +146,24 @@ router.post('/get_crankcase/:pager', function(req, res, next) {
         res.sendStatus(500);
     }
 });
+router.get('/get_pairs', function(req, res, next) { 
+    debug('express POST request route get_pairs');
+    var getPairsPromise = pairServices.getPairs();
+    getPairsPromise.then(successHandler, errorHandler);
+    function successHandler(result) {
+        debug('route  get_pairs successHandler');
+        debug(result);
+        var response = {};
+        response.status = 1;
+        response.message = 'list of pairs';
+        response.data = result;
+        return res.status(200).json(response);
+    }
+    function errorHandler(error) {
+        debug('error in getting pairs');
+        debug(error); 
+        return next(error);
+    }
+});
+
 module.exports = router;

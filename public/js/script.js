@@ -93,6 +93,9 @@ $( document ).delegate("#add_user", "pageinit", function() {
 $( document ).delegate("#modify_user", "pageinit", function() {
   registerModifyUserPageFunctions();
 });
+$( document ).delegate("#pairs_report", "pageinit", function() {
+  registerPairsReportPageFunctions();
+});
 /*
 TO DO - use jQuery validation plugin to validate forms
 $(document).on("pageshow", "#login", function() {
@@ -671,11 +674,6 @@ function registerAddUserPageFunctions() {
     
     $('#au_add_button').click(function(event) {
         event.preventDefault();
-        console.log('user name :' + $('#au_username').val());
-        console.log('password:' + $('#au_password').val());
-        console.log('plant' + $('#au_plant').val());
-        console.log('role : ' + $("input[name=role-choice]:checked").val());
-        console.log('role : ' + $("input[name=screen-choice]:checked").val());
         if (!($('#au_username').val())) {
             showMessage('Please enter user name');
             $('#au_username').focus();
@@ -880,7 +878,51 @@ function registerModifyUserPageFunctions() {
         $('#message_div').hide();
     });
 }
-
+function registerPairsReportPageFunctions() {
+    console.log('inside registerPairsReportPageFunctions');
+    loadLeftPanel('pairs_report');
+    var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
+    var loginUrl = urlDetails.domain + '/get_pairs';
+    console.log(loginUrl);
+    $.ajax({
+            url: loginUrl,
+            async: true,
+            method:'GET',
+            beforeSend: function() {
+                $.mobile.loading('show');
+            },
+            complete: function() {
+                $.mobile.loading('hide');
+                //enable the previously disabled buttons
+                $("button").removeAttr("disabled");
+            },
+            success: function (result) {
+                console.log(result);
+                if (!result.status) {
+                    console.log('record not found');
+                    showMessage(result.message);
+                } 
+                else {
+                    for (var i=0; i<result.data.length;i++) {
+                        $('#pairs-report-row-template table tbody tr td:nth-child(1)').html(result.data[i].crankCase);
+                        $('#pairs-report-row-template table tbody tr td:nth-child(2)').html(result.data[i].beeper);
+                        $('#pairs-report-row-template table tbody tr td:nth-child(3)').html(result.data[i].user);
+                        var template = $('#pairs-report-row-template table tbody').html();
+                        $('#pairs_report_table tbody').append(template);
+                    }
+                    $('#pairs_report_table tbody tr:even').css('background-color', '#DDDFE4');
+                    $('#pairs_report_table tbody tr:odd').css('background-color', '#E0B2AE');
+                    $('#pairs_report_table').table('refresh');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log('Network error has occurred please try again!');
+                showMessage(errorThrown?errorThrown:textStatus);
+            }
+        });         
+}
 
 
 function loadLeftPanel(containerID) {
