@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset = "utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+        <link rel="stylesheet" href="css/style.css"/>
+        <script src="js/jquery-1.11.3.min.js"></script>
+        <script src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script src='js/jQuery_validation_plugin.js'></script>
+        <title>RE Crank Case Tracking System</title>
+    </head>
+    <body>
 <!-- Start of maintenance page -->
         <div data-role="page" id="maintenance">
             <div data-role="header">
@@ -16,30 +30,15 @@
                 </div>
             </div><!-- /content -->
 
-
-
             <div data-role="footer">
                 <h4>RE CrankCase Pairing System</h4>
             </div><!-- /footer -->
 
-            <div data-role="popup" id="popupDialog" data-confirmed="no" data-transition="pop" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:500px;width:215px">
-                <div data-role="header" data-theme="a">
-                    <h1>Unpair All?</h1>
-                </div>
-                <div role="main" class="ui-content">
-                    <h3 class="ui-title">  Remove All Pairs? </h3>
-                    <div class='ui-grid-a'>
-                        <div class='ui-block-a'>
-                            <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b optionConfirm" data-rel="back">Yes</a>
-                        </div>
-                        <div class='ui-block-b'>
-                            <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b optionCancel" data-rel="back" data-transition="flow">No</a>
-                        <div>
-                    </div>
-                </div>
-            </div>
             <div data-role="popup" id="popup_id">
                 <p>The crankcase is paired with the buzzer</p>
             </div>
 
-        </div><!-- /page -->      
+        </div><!-- /page -->   
+        <script src='js/script.js'></script>
+    </body>
+</html>

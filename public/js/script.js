@@ -1,7 +1,11 @@
+console.log('script is getting executed');
 var user = {};
+/*
 $( document ).ready(function() {
+    console.log('document ready event fired');
     $.mobile.pageContainer.pagecontainer("change", "login.html");
 });
+*/
 function registerLoginPageFunctions() {
     console.log('inside registerLoginPageFunctions');
     $('#login_button').click(function(event) {
@@ -66,6 +70,10 @@ function registerLoginPageFunctions() {
         $('#message_div').hide();
     });
 }
+$( document ).delegate("#first_page", "pageinit", function() {
+  $.mobile.pageContainer.pagecontainer("change", "login.html")
+});
+
 $( document ).delegate("#login", "pageinit", function() {
   registerLoginPageFunctions();
 });
@@ -923,8 +931,6 @@ function registerPairsReportPageFunctions() {
             }
         });         
 }
-
-
 function loadLeftPanel(containerID) {
     $.get('left-panel.html', function(data) { 
             console.log('loading left-panel.html');
