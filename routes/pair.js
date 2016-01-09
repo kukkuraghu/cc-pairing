@@ -147,7 +147,7 @@ router.post('/get_crankcase/:pager', function(req, res, next) {
     }
 });
 router.get('/get_pairs', function(req, res, next) { 
-    debug('express POST request route get_pairs');
+    debug('express GET request route get_pairs');
     var getPairsPromise = pairServices.getPairs();
     getPairsPromise.then(successHandler, errorHandler);
     function successHandler(result) {

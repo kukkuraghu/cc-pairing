@@ -67,11 +67,11 @@ function registerLoginPageFunctions() {
     });
 //hide error message when any of the form fields is modified
     $('#login_form').on('input', function() {
-        $('#message_div').hide();
+        hideMessage();
     });
 }
-$( document ).delegate("#first_page", "pageinit", function() {
-  $.mobile.pageContainer.pagecontainer("change", "login.html")
+$( document ).delegate("#first_page", "pagebeforeshow", function() {
+  $.mobile.pageContainer.pagecontainer("change", "login.html");
 });
 
 $( document ).delegate("#login", "pageinit", function() {
@@ -101,7 +101,10 @@ $( document ).delegate("#add_user", "pageinit", function() {
 $( document ).delegate("#modify_user", "pageinit", function() {
   registerModifyUserPageFunctions();
 });
-$( document ).delegate("#pairs_report", "pageinit", function() {
+$( document ).delegate("#list_users", "pagebeforeshow", function() {
+  registerListUsersPageFunctions();
+});
+$( document ).delegate("#pairs_report", "pagebeforeshow", function() {
   registerPairsReportPageFunctions();
 });
 /*
@@ -119,6 +122,10 @@ $(document).on("pageshow", "#login", function() {
 */
 function registerPairingPageFunctions() {
     console.log('inside registerPairingPageFunctions');
+    if (!userLoggedIn()){
+        $.mobile.pageContainer.pagecontainer("change", "login.html");
+        //return false;
+    }
     loadLeftPanel('pairing');
     
     $('#pair_button').click(function(event) {
@@ -175,7 +182,7 @@ function registerPairingPageFunctions() {
     });
     $('#pair_cancel_button').click(function(event) {
         event.preventDefault();
-        $('#message_div').hide();
+        hideMessage();
         $('#pairing_crank_case').val('');
         $('#pairing_crank_case').focus();
         $('#pairing_beeper').val('');
@@ -183,19 +190,23 @@ function registerPairingPageFunctions() {
 
     //hide error message when any of the form fields is modified
     $('#pairing_form').on('input', function() {
-        $('#message_div').hide();
+        hideMessage();
     });
 }
 
 function registerPagingPageFunctions(){ 
     console.log('in registerPagingPageFunctions');
+    if (!userLoggedIn()){
+        $.mobile.pageContainer.pagecontainer("change", "login.html");
+        //return false;
+    }
     //hide the pager form fields and the other related buttons (page and unpair) initially
     $('#paging_pager_div').hide();
     $('#custom_fieldset_buttons').hide();
     loadLeftPanel('paging');
     $('#page_button').click(function(event) {
         event.preventDefault();
-        $('#message_div').hide();   
+        hideMessage();   
         if (!($('#paging_crank_case').val())) {
             showMessage('A valid crankcase entry required');
             $('#paging_crank_case').focus();
@@ -239,7 +250,7 @@ function registerPagingPageFunctions(){
     });
     $('#get_buzzer').click(function(event) {
         event.preventDefault();
-        $('#message_div').hide();
+        hideMessage();
         if (!($('#paging_crank_case').val())) {
             showMessage('A valid crankcase entry required');
             $('#paging_crank_case').focus();
@@ -286,7 +297,7 @@ function registerPagingPageFunctions(){
     });
     $('#unpair_button').click(function(event) {
         event.preventDefault();
-        $('#message_div').hide();
+        hideMessage();
         if (!($('#unpairing_crank_case').val())) {
             showMessage('A valid crankcase entry required');
             $('#unpairing_crank_case').focus();
@@ -340,12 +351,12 @@ function registerPagingPageFunctions(){
 
     //hide the error message(if any), when any of the form fields modified
     $('#paging_form').on('input', function() {
-        $('#message_div').hide();
+        hideMessage();
     });
 
     $('#page_cancel_button').click(function(event) {
         event.preventDefault();
-        $('#message_div').hide();
+        hideMessage();
         $('#paging_pager_div').hide();
         $('#custom_fieldset_buttons').hide();
         $('#paging_crank_case').val('');
@@ -356,6 +367,10 @@ function registerPagingPageFunctions(){
 
 function registerUnpairingPageFunctions(){ 
     console.log('in registerUnpairingPageFunctions');
+    if (!userLoggedIn()){
+        $.mobile.pageContainer.pagecontainer("change", "login.html");
+        //return false;
+    }
     loadLeftPanel('unpairing');
     //hide the unpair button initially
     $('#unpair_button').hide();
@@ -455,7 +470,7 @@ function registerUnpairingPageFunctions(){
     });
     $('#unpair_button').click(function(event) {
         event.preventDefault();
-        $('#message_div').hide();
+        hideMessage();
         if (!($('#unpairing_pager').val())) {
             showMessage('A valid buzzer ID required');
             $('#unpairing_pager').focus();
@@ -509,7 +524,7 @@ function registerUnpairingPageFunctions(){
     $('#unpair_all_button').click(function(event) {
         console.log('inside unpairall handler')
         event.preventDefault();
-        $('#message_div').hide();
+        hideMessage();
         confirmDialog('Remove all pairs?');
     });
     
@@ -556,7 +571,7 @@ function registerUnpairingPageFunctions(){
 
     //hide the error message(if any), when any of the form fields modified
     $('#unpairing_form').on('input', function() {
-        $('#message_div').hide();
+        hideMessage();
     });
 
     $('#unpair_cancel_button').click(function(event) {
@@ -572,7 +587,10 @@ function registerUnpairingPageFunctions(){
 
 function registerMaintenancePageFunctions() {
     console.log('inside registerMaintenancePageFunctions');
-
+    if (!userLoggedIn()){
+        $.mobile.pageContainer.pagecontainer("change", "login.html");
+        //return false;
+    }
     loadLeftPanel('maintenance');
 
     //modify user and add user options are availabe for admin only
@@ -596,9 +614,18 @@ function registerMaintenancePageFunctions() {
         console.log('add_user_button clicked');
         $.mobile.pageContainer.pagecontainer("change", "add_user.html");
     });
+    $('#list_users_button').click(function(event) {
+        event.preventDefault();
+        console.log('list_users_button clicked');
+        $.mobile.pageContainer.pagecontainer("change", "list_users.html");
+    });
 }
 function registerChangePasswordPageFunctions() {
     console.log('inside registerChangePasswordPageFunctions');
+    if (!userLoggedIn()){
+        $.mobile.pageContainer.pagecontainer("change", "login.html");
+        //return false;
+    }
     loadLeftPanel('change_password');
     $('#cp_username').val(user.username);
     
@@ -663,7 +690,7 @@ function registerChangePasswordPageFunctions() {
     });
     $('#cp_cancel_button').click(function(event) {
         event.preventDefault();
-        $('#message_div').hide();
+        hideMessage();
         $('#cp_current_password').val('');
         $('#cp_new_password').val('');
         $('#cp_new2_password').val('');
@@ -672,12 +699,16 @@ function registerChangePasswordPageFunctions() {
 
     //hide error message when any of the form fields is modified
     $('#change_passsword_form').on('input', function() {
-        $('#message_div').hide();
+        hideMessage();
     });
 }
 
 function registerAddUserPageFunctions() {
     console.log('inside registerAddUserPageFunctions');
+    if (!userLoggedIn()){
+        $.mobile.pageContainer.pagecontainer("change", "login.html");
+        //return false;
+    }
     loadLeftPanel('add_user');
     
     $('#au_add_button').click(function(event) {
@@ -737,7 +768,7 @@ function registerAddUserPageFunctions() {
     });
     $('#au_cancel_button').click(function(event) {
         event.preventDefault();
-        $('#message_div').hide();
+        hideMessage();
         $('#au_username').val('');
         $('#au_password').val('');
         $('#au_plant').val('');
@@ -748,12 +779,16 @@ function registerAddUserPageFunctions() {
 
     //hide error message when any of the form fields is modified
     $('#add_user_form').on('input', function() {
-        $('#message_div').hide();
+        hideMessage();
     });
 }
 
 function registerModifyUserPageFunctions() {
     console.log('inside registerModifyUserPageFunctions');
+    if (!userLoggedIn()){
+        $.mobile.pageContainer.pagecontainer("change", "login.html");
+        //return false;
+    }
     loadLeftPanel('modify_user');
     
     $('#get_user_detail_button').click(function(event) {
@@ -789,17 +824,16 @@ function registerModifyUserPageFunctions() {
                     $('#mu_password').val(result.data.password);
                     $('#mu_plant').val(result.data.plant);
                     if (result.data.role) {
-                        console.log('input[name="mu-role-choice"][value="'+result.data.role+'"]');
                         $('input[name="mu-role-choice"][value="'+result.data.role+'"]').prop('checked', true);
                         $('input[type="radio"]').checkboxradio('refresh');
                     }
                     if (result.data.screen) {
-                        console.log('input[name="mu-role-choice"][value="'+result.data.screen+'"]');
                         $('input[name="mu-screen-choice"][value="'+result.data.screen+'"]').prop('checked', true);
                         $('input[type="radio"]').checkboxradio('refresh');
                     }
                     $('#mu_user_detail_id').show();
                     $('#mu_modify_button').show();
+                    $('#mu_delete_button').show();
                     $('#mu_plant').focus();
                 } 
                 else {
@@ -866,11 +900,60 @@ function registerModifyUserPageFunctions() {
         });         
     });
 
+    $('#mu_delete_button').click(function(event) {
+        event.preventDefault();
+        console.log('mu_delete_button clicked');
+        var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
+        console.log(urlDetails.domain);
+        var loginUrl = urlDetails.domain + '/delete_user';
+        
+        $.ajax({
+            url: loginUrl,
+            async: true,
+            method:'POST',
+            data : {username : $('#mu_username').val()},
+            beforeSend: function() {
+                $.mobile.loading('show');
+            },
+            complete: function() {
+                $.mobile.loading('hide');
+            },
+            success: function (result) {
+                console.log(result);
+                if (result.status) {
+                    showMessage(result.message, 'green');
+                    $('#mu_user_detail_id').hide();
+                    $('#mu_modify_button').hide();
+                    $('#mu_delete_button').hide();
+                    $('#mu_username').prop('disabled', false);
+                    $('#mu_username').val('');
+                    $('#mu_password').val('');
+                    $('#mu_plant').val('');
+                    $('input[name="mu-role-choice"][value="regular"]').prop('checked', true);
+                    $('input[name="mu-screen-choice"][value="pairing"]').prop('checked', true);
+                    $('input[type="radio"]').checkboxradio('refresh');
+                    $('#mu_username').focus();
+                } 
+                else {
+                    showMessage(result.message);
+                    $('#mu_plant').focus();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log('Network error has occurred please try again!');
+                showMessage(errorThrown);
+            }
+        });         
+    });
+
     $('#mu_cancel_button').click(function(event) {
         event.preventDefault();
-        $('#message_div').hide();
+        hideMessage();
         $('#mu_user_detail_id').hide();
         $('#mu_modify_button').hide();
+        $('#mu_delete_button').hide();
         $('#mu_username').prop('disabled', false);
         $('#mu_username').val('');
         $('#mu_password').val('');
@@ -883,11 +966,70 @@ function registerModifyUserPageFunctions() {
 
     //hide error message when any of the form fields is modified
     $('#modify_user_form').on('input', function() {
-        $('#message_div').hide();
+        hideMessage();
     });
 }
+function registerListUsersPageFunctions() {
+    console.log('inside registerListUsersPageFunctions');
+    if (!userLoggedIn()){
+        $.mobile.pageContainer.pagecontainer("change", "login.html");
+        //return false;
+    }
+    loadLeftPanel('list_users');
+    var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
+    var loginUrl = urlDetails.domain + '/get_users';
+    console.log(loginUrl);
+    $.ajax({
+            url: loginUrl,
+            async: true,
+            method:'GET',
+            beforeSend: function() {
+                $.mobile.loading('show');
+            },
+            complete: function() {
+                $.mobile.loading('hide');
+                //enable the previously disabled buttons
+                //$("button").removeAttr("disabled");
+            },
+            success: function (result) {
+                console.log(result);
+                if (!result.status) {
+                    console.log('record not found');
+                    showMessage(result.message);
+                } 
+                else {
+                    $('#list_users_table tbody').html('');
+                    for (var i=0; i<result.data.length;i++) {
+                        //clear the template row data. result.data[i].user can be undefined. If it is undefined, html() won't clear the previous value in the template.
+                        $('#list-users-row-template table tbody tr td').html('');
+                        $('#list-users-row-template table tbody tr td:nth-child(1)').html(result.data[i].username);
+                        $('#list-users-row-template table tbody tr td:nth-child(2)').html(result.data[i].role);
+                        $('#list-users-row-template table tbody tr td:nth-child(3)').html(result.data[i].plant);
+                        var template = $('#list-users-row-template table tbody').html();
+                        console.log(template);
+                        $('#list_users_table tbody').append(template);
+                    }
+                    $('#list_users_table tbody tr:even').css('background-color', '#DDDFE4');
+                    $('#list_users_table tbody tr:odd').css('background-color', '#E0B2AE');
+                    $('#list_users_table').table('refresh');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                console.log('Network error has occurred please try again!');
+                showMessage(errorThrown?errorThrown:textStatus);
+            }
+        });         
+}
+
+
 function registerPairsReportPageFunctions() {
     console.log('inside registerPairsReportPageFunctions');
+    if (!userLoggedIn()){
+        $.mobile.pageContainer.pagecontainer("change", "login.html");
+        //return false;
+    }
     loadLeftPanel('pairs_report');
     var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
     var loginUrl = urlDetails.domain + '/get_pairs';
@@ -911,7 +1053,10 @@ function registerPairsReportPageFunctions() {
                     showMessage(result.message);
                 } 
                 else {
+                    $('#pairs_report_table tbody').html('');
                     for (var i=0; i<result.data.length;i++) {
+                        //clear the template row data. result.data[i].user can be undefined. If it is undefined, html() won't clear the previous value in the template.
+                        $('#pairs-report-row-template table tbody tr td').html('');
                         $('#pairs-report-row-template table tbody tr td:nth-child(1)').html(result.data[i].crankCase);
                         $('#pairs-report-row-template table tbody tr td:nth-child(2)').html(result.data[i].beeper);
                         $('#pairs-report-row-template table tbody tr td:nth-child(3)').html(result.data[i].user);
@@ -943,13 +1088,23 @@ function loadLeftPanel(containerID) {
 
 function showMessage(errorMessage, color){
     color = color || 'red';
+    var currentPage = $.mobile.pageContainer.pagecontainer('getActivePage');
+    var messageContainer = currentPage.find('#message_div');
+    console.log(messageContainer);
+/*    
     $('#message_div').css('color', color);
     $('#message_div p').text(errorMessage);
     $('#message_div').show();
+*/    
+    messageContainer.css('color', color);
+    messageContainer.find('p').text(errorMessage);
+    messageContainer.show();
 }
 
 function hideMessage(){
-    $('#message_div').hide();
+    var currentPage = $.mobile.pageContainer.pagecontainer('getActivePage');
+    var messageContainer = currentPage.find('#message_div');
+    messageContainer.hide();
 }
 
 function showPopup(popupMessage) {
@@ -975,4 +1130,8 @@ function confirmDialog(text, callback) {
     popupDialogObj.find(".optionConfirm").first().on('click', function () {
         popupDialogObj.attr('data-confirmed', 'yes');
     });
+}
+
+function userLoggedIn() {
+    return user.username; //if the user is availabe user.username will be a truthy otherwise undefined (falsy).
 }

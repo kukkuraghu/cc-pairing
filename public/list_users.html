@@ -12,34 +12,42 @@
         <title>RE Crank Case Tracking System</title>
     </head>
     <body>
-<!-- Start of maintenance page -->
-        <div data-role="page" id="maintenance">
+        <!-- Start of list users page -->
+        <div data-role="page" id="list_users">
             <div data-role="header">
                 <a href="#nav_panel"   data-icon="bars" data-iconpos="notext">Menu</a>
-                <h1>Maintenance</h1>
+                <h1>Users List</h1>
             </div><!-- /header -->
 
             <div data-role="content">   
-                <div id='message_div' style='display:none'>
-                    <p>Error in paging</p>
-                </div>
-                <div data-role="controlgroup">
-                    <button id='change_password_button'>Change Password</button>
-                    <button id='modify_user_button'>Update User</button>
-                    <button id='add_user_button'>Add User</button>
-                    <button id='list_users_button'>List Users</button>
+                <table data-role="table" id="list_users_table" class="ui-responsive">
+                    <thead>
+                        <tr>
+                          <th>Username</th>
+                          <th>Role</th>
+                          <th>Plant</th>
+                        </tr>
+                    </thead>
+                    <tbody id='list_users_table'>
+                    </tbody>
+                </table>
+                <div id="list-users-row-template" style='display:none'>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div><!-- /content -->
 
             <div data-role="footer">
                 <h4>RE CrankCase Pairing System</h4>
             </div><!-- /footer -->
-
-            <div data-role="popup" id="popup_id">
-                <p>The crankcase is paired with the buzzer</p>
-            </div>
-
-        </div><!-- /page -->   
+        </div><!-- /page -->
         <script src='js/script.js'></script>
     </body>
 </html>

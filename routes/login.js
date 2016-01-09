@@ -158,10 +158,59 @@ router.post('/modify_user', function(req, res, next) {
         return res.status(200).json(response);
     }
     function modifyUserFailure(data) {
-        next('Add user failed');
+        next('Delete user failed');
     }
 
 });
 
+router.post('/delete_user', function(req, res, next) { 
+    debug('express POST request route delete_user ');
+    var getUserPromise = usersServices.getUser(req.body.username);
+    getUserPromise.then(getUserSuccess, getUserFailure);
+    function getUserSuccess(data) {
+        debug('route update_usdelete_userer getUserSuccess');
+        var response = {status : 0, message :''};
+        if (!data) {
+            response.status = 0;
+            response.message = 'User does not exist';
+            return res.status(200).json(response);
+        }
+        else {
+            var deleteUserPromise = usersServices.deleteUser(req.body.username);
+            deleteUserPromise.then(deleteUserSuccess, deleteUserFailure);
+        }
+    }
+    function getUserFailure(data) {
+        next('Database error');
+    }
+    function deleteUserSuccess(data) {
+        var response = {status : 1, message :'User deleted'};
+        return res.status(200).json(response);
+    }
+    function deleteUserFailure(data) {
+        next('Delete user failed');
+    }
+
+});
+
+router.get('/get_users', function(req, res, next) { 
+    debug('express GET request route get_users');
+    var getUsersPromise = usersServices.getUsers();
+    getUsersPromise.then(successHandler, errorHandler);
+    function successHandler(result) {
+        debug('route  get_users successHandler');
+        debug(result);
+        var response = {};
+        response.status = 1;
+        response.message = 'list of users';
+        response.data = result;
+        return res.status(200).json(response);
+    }
+    function errorHandler(error) {
+        debug('error in getting users');
+        debug(error); 
+        return next(error);
+    }
+});
 
 module.exports = router;
