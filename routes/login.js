@@ -14,6 +14,7 @@ router.post('/login', function(req, res, next) {
     function usersServicesSuccess(data) {
         var response = {status : 0, message :'Authorization Failed'};
         if (data && data.password === req.body.password) {
+            res.set('Access-Control-Allow-Origin', '*');
             response.status = 1;
             response.message = 'Authorization Successful';
             response.data = data;

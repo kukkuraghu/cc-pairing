@@ -38,7 +38,7 @@ router.post('/pair', function(req, res, next) {
     }
 });
 
-router.post('/unpair/:crankcase/:beeper', function(req, res, next) { 
+router.post('/unpair', function(req, res, next) { 
     debug('express POST request route unpair ' + 'crankCase :' + req.body.crankCase + ' beeperId :' + req.body.beeper);
     var getBeeperPromise = pairServices.getMatchingBeeper(req.body.crankCase);
     getBeeperPromise.then(beeperSuccess, beeperFailure);
@@ -51,7 +51,7 @@ router.post('/unpair/:crankcase/:beeper', function(req, res, next) {
                 unpair();    
             }
             else {
-                debug('router unpair, function beeperSuccess, beeper does not matche with crankcase')
+                debug('router unpair, function beeperSuccess, beeper does not match with crankcase')
                 response.status = 0;
                 response.message = 'Matching pair not found';
                 return res.status(200).json(response);
@@ -64,7 +64,7 @@ router.post('/unpair/:crankcase/:beeper', function(req, res, next) {
         }
     }
     function beeperFailure(error) {
-        debug('route page get_pager error : ' + error);
+        debug('route unpair beeperFailure error : ' + error);
         res.sendStatus(500);
     }
     function unpair() {

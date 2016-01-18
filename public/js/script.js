@@ -298,18 +298,18 @@ function registerPagingPageFunctions(){
     $('#unpair_button').click(function(event) {
         event.preventDefault();
         hideMessage();
-        if (!($('#unpairing_crank_case').val())) {
+        if (!($('#paging_crank_case').val())) {
             showMessage('A valid crankcase entry required');
-            $('#unpairing_crank_case').focus();
+            $('#paging_crank_case').focus();
             return false;
         }
-        if (!($('#unpairing_pager').val())) {
+        if (!($('#paging_pager').val())) {
             showMessage('A valid beeper ID required');
-            $('#unpairing_pager').focus();
+            $('#paging_pager').focus();
             return false;
         }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
-        var loginUrl = urlDetails.domain + '/unpair/' + $('#paging_crank_case').val() + '/' + $('#paging_pager').val();
+        var loginUrl = urlDetails.domain + '/unpair';
         console.log('crank case :' + $('#paging_crank_case').val());
         console.log('beeper id :' + $('#paging_pager').val());
         console.log(loginUrl);
@@ -482,7 +482,7 @@ function registerUnpairingPageFunctions(){
             return false;
         }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
-        var loginUrl = urlDetails.domain + '/unpair/' + $('#unpairing_crank_case').val() + '/' + $('#unpairing_pager').val();
+        var loginUrl = urlDetails.domain + '/unpair';
         console.log('crank case :' + $('#unpairing_crank_case').val());
         console.log('beeper id :' + $('#unpairing_pager').val());
         console.log(loginUrl);
@@ -1090,12 +1090,6 @@ function showMessage(errorMessage, color){
     color = color || 'red';
     var currentPage = $.mobile.pageContainer.pagecontainer('getActivePage');
     var messageContainer = currentPage.find('#message_div');
-    console.log(messageContainer);
-/*    
-    $('#message_div').css('color', color);
-    $('#message_div p').text(errorMessage);
-    $('#message_div').show();
-*/    
     messageContainer.css('color', color);
     messageContainer.find('p').text(errorMessage);
     messageContainer.show();
