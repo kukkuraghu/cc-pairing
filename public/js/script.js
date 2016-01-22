@@ -233,12 +233,14 @@ function registerPagingPageFunctions(){
                 $.mobile.loading('hide');
             },
             success: function (result) {
-                console.log('paging successful');
                 console.log(result);
                 if (!result.status) {
-                    console.log('record not found');
+                    $("#paging_crank_case").focus();
+                    //$("#paging_crank_case").focus(function () { this.setSelectionRange(0, 9999); return false; } ).mouseup( function () { return false; });
+                    showMessage(result.message);
                 } 
                 else {
+                    showMessage(result.message, 'green');
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -295,7 +297,7 @@ function registerPagingPageFunctions(){
             }
         });         
     });
-    $('#unpair_button').click(function(event) {
+    $('#paging_unpair_button').click(function(event) {
         event.preventDefault();
         hideMessage();
         if (!($('#paging_crank_case').val())) {
@@ -468,7 +470,7 @@ function registerUnpairingPageFunctions(){
             }
         });         
     });
-    $('#unpair_button').click(function(event) {
+    $('#unpair_unpair_button').click(function(event) {
         event.preventDefault();
         hideMessage();
         if (!($('#unpairing_pager').val())) {

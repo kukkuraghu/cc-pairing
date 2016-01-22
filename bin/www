@@ -1,11 +1,14 @@
-'use strict'
+'use strict';
 var debug = require('debug')('example-server'); 
-//var server_ip = process.env.server_ip;
-var server_ip = '192.168.1.34';
-//var server_port = process.env.server_port;
-//server_port = server_port || 8080;
-var server_port = 8081;
+var server_ip = process.env.server_ip;
+//var server_ip = server_ip || 'localhost';
+var server_port = process.env.server_port;
+server_port = server_port || '8080';
+debug(server_ip);
+//var server_port = 8081;
 var app = require('../');
+debug(server_ip);
+debug(server_port);
 app.set('host', server_ip);
 app.set('port', server_port);
 debug('port :' + app.get('port') + ' host : ' + app.get('host'));
