@@ -14,13 +14,13 @@
     <body>
 <!-- Start of unpairing page -->
         <div data-role="page" id="unpairing">
-            <div data-role="header">
+            <div data-role="header" data-position="fixed">
                 <a href="#nav_panel"   data-icon="bars" data-iconpos="notext">Menu</a>
                 <h1>Unpair</h1>
             </div><!-- /header -->
 
             <div data-role="content">   
-                <form id='unpairing_form'>
+                <form id='unpairing_form' autocomplete='off'>
                     <div id='unpairing_pager_grid' class='ui-grid-a'>
                         <label for='unpairing_pager' id='paging_pager_label'>Buzzer ID</label>
                         <div  id='unpairing_pager_div' class='ui-block-a'>
@@ -51,7 +51,7 @@
 
 
 
-            <div data-role="footer">
+            <div data-role="footer" data-position="fixed">
                 <h4>RE CrankCase Pairing System</h4>
             </div><!-- /footer -->
 

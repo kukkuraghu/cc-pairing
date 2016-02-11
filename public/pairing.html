@@ -15,13 +15,13 @@
         <!-- Start of pairing page -->
         <div data-role="page" id="pairing" class="ui-responsive-panel">
 
-            <div data-role="header">
+            <div data-role="header" data-position="fixed">
                 <a href="#nav_panel"   data-icon="bars" data-iconpos="notext">Menu</a>
                 <h1>CrankCase Pairing</h1>
             </div><!-- /header -->
 
             <div data-role="content">   
-                <form id='pairing_form'>
+                <form id='pairing_form' autocomplete='off'>
                     <label for='pairing_crank_case'>Crank Case</label>
                     <input type='text' id='pairing_crank_case' name='crank_case' autofocus>
                     <label for='pairing_beeper'>Buzzer ID</label>
@@ -37,7 +37,7 @@
                 </div>
             </div><!-- /content -->
             
-            <div data-role="footer">
+            <div data-role="footer" data-position="fixed">
                 <h4>RE CrankCase Pairing System</h4>
             </div><!-- /footer -->
             

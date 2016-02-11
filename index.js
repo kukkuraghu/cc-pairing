@@ -10,6 +10,7 @@ require('./lib/connections');
 var pair = require('./routes/pair'); 
 var page = require('./routes/page');
 var login = require('./routes/login');
+var currentCC = require('./routes/currentCC');
 var app = express();
 // app.use(favicon(__dirname + '/public/favicon.ico')); 
 app.use(logger('dev')); 
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(login);
 app.use(pair); 
 app.use(page);
+app.use(currentCC);
 // catch 404 and forward to error handler 
 app.use(function(req, res, next) {  var err = new Error('Not Found');
     err.status = 404;  

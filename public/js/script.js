@@ -219,7 +219,7 @@ function registerPagingPageFunctions(){
         }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         console.log(urlDetails.domain);
-        var loginUrl = urlDetails.domain + '/page/' + $('#paging_crank_case').val();
+        var loginUrl = urlDetails.domain + '/page';
         console.log('crank case :' + $('#paging_crank_case').val());
         $.ajax({
             url: loginUrl,  
@@ -260,7 +260,7 @@ function registerPagingPageFunctions(){
         }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         console.log(urlDetails.domain);
-        var loginUrl = urlDetails.domain + '/page/' + $('#paging_crank_case').val();
+        var loginUrl = urlDetails.domain + '/page';
         console.log('crank case :' + $('#paging_crank_case').val());
         $.ajax({
             url: loginUrl,  

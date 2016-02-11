@@ -166,4 +166,29 @@ router.get('/get_pairs', function(req, res, next) {
     }
 });
 
+router.post('/get_pager/:crankCase', function(req, res, next) { 
+    debug('express POST request route pair get_pager ' + 'crankCase : ' + req.params.crankCase);
+    var getBeeperPromise = pairServices.getMatchingBeeper(req.params.crankCase);
+    getBeeperPromise.then(beeperSuccess, beeperFailure);
+    function beeperSuccess(data) {
+        var response = {};
+        debug('router get_pager, function beeperSuccess, data : ' + data);
+        if (data) {
+            response.status = 1;
+            response.message = 'Matching pager found';
+            response.data = data;
+        }
+        else {
+            response.status = 0;
+            response.message = 'Matching pager not found';
+        }
+        debug('router get_pager, before sending the response');
+        return res.status(200).json(response);
+    }
+    function beeperFailure(error) {
+        debug('route page get_pager error : ' + error);
+        res.sendStatus(500);
+    }
+});
+
 module.exports = router;
