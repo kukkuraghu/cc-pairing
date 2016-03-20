@@ -1,5 +1,5 @@
 cd C:\Users\raghu\Documents\Comorin\RE Project\Development
-start  start_db.bat
+start/min  start_db.bat
 set NODE_ENV=development
 set debug=example-server
 REM
@@ -11,8 +11,8 @@ set db_name=recrankcasedb
 REM
 REM set the web server ip and port
 REM set server_ip=127.0.0.1
-set server_ip=192.168.1.11
-REM set server_ip=localhost
+REM server_ip=192.168.1.11
+set server_ip=localhost
 set server_port=8080
 REM
 REM provide the transmitter ip address, port and capcode

@@ -21,20 +21,20 @@ router.post('/page', function(req, res, next) {
             response.message = 'Paged Successfully';
             response.data = data;
         }
-        else {
-            response.status = 0;
-            response.message = 'Matching pager not found';
-        }
         debug('/page/:crankCase, before sending the response');
         return res.status(200).json(response);
     }
     function beeperFailure(error) {
         debug('route page beeperFailure error : ' + error);
         //debug('route page beeperFailure data : ' + data);
+        //this function will be called, when there is no beeper matching the crankcase or
+        //if the paging fails due to some reason
         var response = {};
-        error.status = 0;
+        response.data = error.data;
+        response.status = 0;
+        response.message = error.message;
         debug(error);
-        res.status(200).json(error);
+        res.status(200).json(response);
     }
 });
 

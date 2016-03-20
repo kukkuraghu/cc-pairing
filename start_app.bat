@@ -1,0 +1,1 @@
+wscript "C:\Users\raghu\Documents\Comorin\RE Project\Development\invisible.vbs" "C:\Users\raghu\Documents\Comorin\RE Project\Development\start_app_server.bat"

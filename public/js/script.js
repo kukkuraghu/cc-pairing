@@ -276,10 +276,10 @@ function registerPagingPageFunctions(){
             success: function (result) {
                 console.log(result);
                 
-                if (result.beeper) {
+                if (result.data && result.data.beeper) {
                     $('#paging_pager_div').show();
                     $('#custom_fieldset_buttons').show();
-                    $('#paging_pager').val(result.beeper);
+                    $('#paging_pager').val(result.data.beeper);
                 }
                 if (!result.status) {
                     $("#paging_crank_case").focus(function () { this.setSelectionRange(0, 9999); return false; } ).mouseup( function () { return false; });
