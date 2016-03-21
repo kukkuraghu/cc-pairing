@@ -123,8 +123,9 @@ $(document).on("pageshow", "#login", function() {
 function registerPairingPageFunctions() {
     console.log('inside registerPairingPageFunctions');
     if (!userLoggedIn()){
+        $('#pairing').remove();
         $.mobile.pageContainer.pagecontainer("change", "login.html");
-        //return false;
+        return false;
     }
     loadLeftPanel('pairing');
     
@@ -199,8 +200,9 @@ function registerPairingPageFunctions() {
 function registerPagingPageFunctions(){ 
     console.log('in registerPagingPageFunctions');
     if (!userLoggedIn()){
+        $('#paging').remove();
         $.mobile.pageContainer.pagecontainer("change", "login.html");
-        //return false;
+        return false;
     }
     //hide the pager form fields and the other related buttons (page and unpair) initially
     $('#paging_pager_div').hide();
@@ -372,8 +374,9 @@ function registerPagingPageFunctions(){
 function registerUnpairingPageFunctions(){ 
     console.log('in registerUnpairingPageFunctions');
     if (!userLoggedIn()){
+        $('#unpairing').remove();
         $.mobile.pageContainer.pagecontainer("change", "login.html");
-        //return false;
+        return false;
     }
     loadLeftPanel('unpairing');
     //hide the unpair button initially
@@ -592,8 +595,9 @@ function registerUnpairingPageFunctions(){
 function registerMaintenancePageFunctions() {
     console.log('inside registerMaintenancePageFunctions');
     if (!userLoggedIn()){
+        $('#maintenance').remove();
         $.mobile.pageContainer.pagecontainer("change", "login.html");
-        //return false;
+        return false;
     }
     loadLeftPanel('maintenance');
 
@@ -627,8 +631,9 @@ function registerMaintenancePageFunctions() {
 function registerChangePasswordPageFunctions() {
     console.log('inside registerChangePasswordPageFunctions');
     if (!userLoggedIn()){
+        $('#change_password').remove();
         $.mobile.pageContainer.pagecontainer("change", "login.html");
-        //return false;
+        return false;
     }
     loadLeftPanel('change_password');
     $('#cp_username').val(user.username);
@@ -710,8 +715,9 @@ function registerChangePasswordPageFunctions() {
 function registerAddUserPageFunctions() {
     console.log('inside registerAddUserPageFunctions');
     if (!userLoggedIn()){
+        $('#add_user').remove();
         $.mobile.pageContainer.pagecontainer("change", "login.html");
-        //return false;
+        return false;
     }
     loadLeftPanel('add_user');
     
@@ -790,6 +796,7 @@ function registerAddUserPageFunctions() {
 function registerModifyUserPageFunctions() {
     console.log('inside registerModifyUserPageFunctions');
     if (!userLoggedIn()){
+        $('#modify_user').remove();
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         //return false;
     }
@@ -976,8 +983,9 @@ function registerModifyUserPageFunctions() {
 function registerListUsersPageFunctions() {
     console.log('inside registerListUsersPageFunctions');
     if (!userLoggedIn()){
+        $('#list_users').remove();
         $.mobile.pageContainer.pagecontainer("change", "login.html");
-        //return false;
+        return false;
     }
     loadLeftPanel('list_users');
     var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
@@ -1031,8 +1039,9 @@ function registerListUsersPageFunctions() {
 function registerPairsReportPageFunctions() {
     console.log('inside registerPairsReportPageFunctions');
     if (!userLoggedIn()){
+        $('#pairs_report').remove();
         $.mobile.pageContainer.pagecontainer("change", "login.html");
-        //return false;
+        return false;
     }
     loadLeftPanel('pairs_report');
     var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
@@ -1087,6 +1096,14 @@ function loadLeftPanel(containerID) {
             $(pageID).append(data);
             $("[data-role=panel]").panel().enhanceWithin(); 
             $(pageID + ' [data-role=panel] li').filter(pageID + '_page').remove();
+            if (user.role === 'regular' && user.screen === 'pairing') {
+                $(pageID + ' [data-role=panel]  #paging_page').remove();
+            }
+            if (user.role === 'regular' && user.screen === 'paging') {
+                $(pageID + ' [data-role=panel]  #pairing_page').remove();
+                $(pageID + ' [data-role=panel]  #unpairing_page').remove();
+                $(pageID + ' [data-role=panel]  #pairs_report_page').remove();
+            }
         }, 'html');
 }
 
