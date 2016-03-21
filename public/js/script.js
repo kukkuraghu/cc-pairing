@@ -1,5 +1,9 @@
 console.log('script is getting executed');
 var user = {};
+var user_detail = localStorage.getItem("user_detail");
+if (user_detail) {
+    user = JSON.parse(user_detail);
+}
 /*
 $( document ).ready(function() {
     console.log('document ready event fired');
@@ -53,6 +57,7 @@ function registerLoginPageFunctions() {
                     user.role = result.data.role;
                     user.plant = result.data.plant;
                     user.screen = result.data.screen || 'pairing';//if the default screen is available, use that otherwise make pairing as the default screeen.
+                    localStorage.setItem("user_detail", JSON.stringify(user));
                     (user.screen === 'pairing') ? $.mobile.pageContainer.pagecontainer("change", "pairing.html") : $.mobile.pageContainer.pagecontainer("change", "paging.html");
                     //$.mobile.pageContainer.pagecontainer("change", "pairing.html");
                 }
@@ -71,7 +76,12 @@ function registerLoginPageFunctions() {
     });
 }
 $( document ).delegate("#first_page", "pagebeforeshow", function() {
-  $.mobile.pageContainer.pagecontainer("change", "login.html");
+    if (userLoggedIn) {
+        (user.screen === 'pairing') ? $.mobile.pageContainer.pagecontainer("change", "pairing.html") : $.mobile.pageContainer.pagecontainer("change", "paging.html");
+    }
+    else {
+        $.mobile.pageContainer.pagecontainer("change", "login.html");
+    }
 });
 
 $( document ).delegate("#login", "pageinit", function() {
