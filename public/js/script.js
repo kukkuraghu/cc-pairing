@@ -117,6 +117,10 @@ $( document ).delegate("#list_users", "pagebeforeshow", function() {
 $( document ).delegate("#pairs_report", "pagebeforeshow", function() {
   registerPairsReportPageFunctions();
 });
+$( document ).delegate("#logout", "click", function() {
+    localStorage.removeItem("user_detail");
+    $.mobile.pageContainer.pagecontainer("change", "login.html");
+});
 /*
 TO DO - use jQuery validation plugin to validate forms
 $(document).on("pageshow", "#login", function() {
