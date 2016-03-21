@@ -19,4 +19,7 @@ REM provide the transmitter ip address, port and capcode
 set transmitter_ip=192.168.1.37
 set transmitter_port=30090
 set transmitter_capCode=039
+
+REM CC_LENGTH is given a positive integer value, for all crank case fetching, only the first CC_LENGTH characters are considered.
+set CC_LENGTH=5
 node bin/www

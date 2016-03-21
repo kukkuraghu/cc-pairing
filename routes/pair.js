@@ -29,12 +29,48 @@ router.post('/pair', function(req, res, next) {
             var response = {};
             response.status = 0;
             response.message = 'Either crankcase or buzzer already paired';
-            response.data = error;
-            debug(response);
-            return res.status(200).json(response);
+
+            var getBeeperPromise = pairServices.getMatchingBeeper(req.body.crankCase);
+            getBeeperPromise.then(beeperSuccess, beeperFailure);
+            function beeperSuccess(data) {
+                debug('router pair, function beeperSuccess, data : ' + data);
+                if (data) {
+                    response.message = 'Crank case ' + data.crankCase +' already paired with beeper ' + data.beeper;
+                    response.data = data;
+                    return res.status(200).json(response);
+                }
+                else {
+                    var getCCPromise = pairServices.getMatchingCC(req.body.beeper);
+                    getCCPromise.then(CCSuccess, CCFailure);
+                    function CCSuccess(data) {
+                        debug('router pair, function CCSuccess, data : ' + data);
+                        if (data) {
+                            response.message = 'Crank case ' + data.crankCase +' already paired with beeper ' + data.beeper;
+                            response.data = data;
+                        }
+                        else {
+                            response.message = 'Severe Error. Contact Admin';
+                        }
+                        return res.status(200).json(response);
+                    }
+                    function CCFailure(error) {
+                        debug('route pair  function CCFailure error : ' + error);
+                        res.sendStatus(500);
+                    }
+                }
+            }
+            function beeperFailure(error) {
+                debug('route pair beeperFailure error : ' + error);
+                return next(error);
+            }
+
+            //debug(response);
+            //return res.status(200).json(response);
             //return res.status(500).send({ succes: false, message: 'record already exist!' });
         }
-        return next(error);
+        else {
+            return next(error);
+        }
     }
 });
 
@@ -191,4 +227,10 @@ router.post('/get_pager/:crankCase', function(req, res, next) {
     }
 });
 
+//function returns trimmed crank case (cc) label. 
+//cc will be trimmed to a length mentioned in the environment variable CC-LENGTH
+//If no CC-LENGTH is set, the function will return cc as it is.
+function trimCrankCase(cc) {
+    return cc;
+}
 module.exports = router;
