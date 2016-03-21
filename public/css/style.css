@@ -72,4 +72,12 @@
     border : 0px;
 }
 
+@keyframes blink {
+    to { color: red; }
+}
+
+h1.blink {
+    color: blue;
+    animation: blink 1s steps(2, start) infinite;
+}
 

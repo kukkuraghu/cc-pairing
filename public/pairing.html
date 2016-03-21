@@ -40,6 +40,18 @@
             <div data-role="footer" data-position="fixed">
                 <h4>RE CrankCase Pairing System</h4>
             </div><!-- /footer -->
+
+            <div data-role="popup" id="pairErrorPopup" data-confirmed="no" data-transition="pop" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:500px;width:300px">
+                <div data-role="header" data-theme="a">
+                    <h1 class="blink">!ERROR!</h1>
+                </div>
+                <div role="main" class="ui-content">
+                    <p id="pairErrorMessage">Error in Pairing</p>
+                    <div data-theme="a">
+                        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b optionConfirm" data-rel="back">OK</a>
+                    </div>
+                </div>
+            </div>
             
         </div><!-- /page -->  
         <script src='js/script.js'></script>

@@ -170,6 +170,8 @@ function registerPairingPageFunctions() {
                 } 
                 else {
                     showMessage(result.message);
+                    $('#pairErrorMessage').text(result.message);
+                    $('#pairErrorPopup').popup('open');//opens the popup
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -1131,3 +1133,4 @@ function confirmDialog(text, callback) {
 function userLoggedIn() {
     return user.username; //if the user is availabe user.username will be a truthy otherwise undefined (falsy).
 }
+
