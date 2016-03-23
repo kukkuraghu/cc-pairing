@@ -396,8 +396,15 @@ function registerUnpairingPageFunctions(){
         return false;
     }
     loadLeftPanel('unpairing');
+    //show unpair all button only for admin users
+    if (user.role !== 'admin') {
+        $('#unpair_all_button').hide();    
+    }
+    else {
+        $('#unpair_all_button').show();
+    }
     //hide the unpair button initially
-    $('#unpair_button').hide();
+    $('#unpair_unpair_button').hide();
     $('#get_crankcase').click(function(event) {
         event.preventDefault();
         $('#unpairing_crank_case').val('');//clear the pager data, if it is already there
@@ -426,7 +433,7 @@ function registerUnpairingPageFunctions(){
             success: function (result) {
                 console.log(result);
                 if (result.data && result.data.crankCase) {
-                    $('#unpair_button').show();
+                    $('#unpair_unpair_button').show();
                     $('#unpairing_crank_case').val(result.data.crankCase);
                 }
                 if (!result.status) {
