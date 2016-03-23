@@ -152,8 +152,11 @@ function registerPairingPageFunctions() {
             $('#pairing_crank_case').focus();
             return false;
         }
-        if (!($('#pairing_beeper').val())) {
+        //Check whether a valid beeper id is entered
+        if (!valid_beeper($('#pairing_beeper').val())) {
+            //Not a valid beeper ID
             showMessage('A valid beeper ID required');
+            $('#pairing_beeper').focus(function () { this.setSelectionRange(0, 9999); return false; } ).mouseup( function () { return false; });
             $('#pairing_beeper').focus();
             return false;
         }
@@ -1165,3 +1168,12 @@ function userLoggedIn() {
     return user.username; //if the user is availabe user.username will be a truthy otherwise undefined (falsy).
 }
 
+//Checks whether the input_beeper is a valid beeper id 
+//returns false if it is not a valid beeper id otherwise returns true
+function valid_beeper(input_beeper) {
+    if (input_beeper.length !== 4)  return false; //beeper ID length should be 4
+    var beeper = parseInt(input_beeper);//parse the integer from the input string
+    if (isNaN(beeper)) return false;//if not a number, it is not valid beeper ID
+    if (beeper > 9999 || beeper < 1) return false; //A valid beeper ID is a 4 digit non zero number
+    return true;
+}
