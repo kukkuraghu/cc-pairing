@@ -18,7 +18,7 @@ router.post('/page', function(req, res, next) {
         debug('router /page/:crankCase, function beeperSuccess, data : ' + data);
         if (data) {
             response.status = 1;
-            response.message = 'Paged Successfully';
+            response.message = 'Beeper ' + data.beeper + ' paged Successfully';
             response.data = data;
         }
         debug('/page/:crankCase, before sending the response');
@@ -33,6 +33,9 @@ router.post('/page', function(req, res, next) {
         response.data = error.data;
         response.status = 0;
         response.message = error.message;
+        if (error.data && error.data.beeper) {
+            response.message = 'Matching beeper found. But not able to page';
+        }
         debug(error);
         res.status(200).json(response);
     }

@@ -16,7 +16,7 @@ router.post('/pair', function(req, res, next) {
         debug(result);
         var response = {};
         response.status = 1;
-        response.message = 'Crankcase is paired with the buzzer';
+        response.message = 'CC ' + result.crankCase + ' is paired with the buzzer ' + result.beeper;
         response.data = result;
         return res.status(200).json(response);
     }
@@ -111,7 +111,7 @@ router.post('/unpair', function(req, res, next) {
             //debug(result);
             var response = {};
             response.status = 1;
-            response.message = 'Crankcase unpaired from the buzzer';
+            response.message = 'CC ' + req.body.crankCase + ' unpaired from the buzzer ' + req.body.beeper;
             response.data = JSON.parse(JSON.stringify(result));
             debug(response.data);
             return res.status(200).json(response);

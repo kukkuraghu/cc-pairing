@@ -21,22 +21,22 @@
 
             <div data-role="content">   
                 <form id='unpairing_form' autocomplete='off'>
-                    <div id='unpairing_pager_grid' class='ui-grid-a'>
-                        <label for='unpairing_pager' id='paging_pager_label'>Buzzer ID</label>
-                        <div  id='unpairing_pager_div' class='ui-block-a'>
-                            <input type='text' id='unpairing_pager' name='unpairing_pager' autofocus>
-                        </div>
-                        <div id='get_crankcase_div' class='ui-block-b'>
-                            <button id='get_crankcase'>Get cCase</button>
-                        </div>
-                    </div>
                     <div id='crankCase_grid' class="ui-grid-a">
                         <label for='unpairing_crankCase_div'>Crank Case</label>
                         <div id='unpairing_crankCase_div' class="ui-block-a">
-                            <input type='text' id='unpairing_crank_case' name='crank_case'>
+                            <input type='text' id='unpairing_crank_case' name='crank_case'autofocus>
                         </div>
                         <div id='get_unpair_buzzer_div' class="ui-block-b">
                             <button id='get_unpair_buzzer'>Get Buzzer</button>
+                        </div>
+                    </div>
+                    <div id='unpairing_pager_grid' class='ui-grid-a'>
+                        <label for='unpairing_pager' id='paging_pager_label'>Buzzer ID</label>
+                        <div  id='unpairing_pager_div' class='ui-block-a'>
+                            <input type='text' id='unpairing_pager' name='unpairing_pager'>
+                        </div>
+                        <div id='get_crankcase_div' class='ui-block-b' style='display:none'>
+                            <button id='get_crankcase'>Get cCase</button>
                         </div>
                     </div>
                     <div id='message_div' style='display:none'>

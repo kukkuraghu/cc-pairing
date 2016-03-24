@@ -4,6 +4,7 @@ var user_detail = localStorage.getItem("user_detail");
 if (user_detail) {
     user = JSON.parse(user_detail);
 }
+var CC_LENGTH = 14;
 /*
 $( document ).ready(function() {
     console.log('document ready event fired');
@@ -58,8 +59,16 @@ function registerLoginPageFunctions() {
                     user.plant = result.data.plant;
                     user.screen = result.data.screen || 'pairing';//if the default screen is available, use that otherwise make pairing as the default screeen.
                     localStorage.setItem("user_detail", JSON.stringify(user));
-                    (user.screen === 'pairing') ? $.mobile.pageContainer.pagecontainer("change", "pairing.html") : $.mobile.pageContainer.pagecontainer("change", "paging.html");
-                    //$.mobile.pageContainer.pagecontainer("change", "pairing.html");
+                    switch (user.screen) {
+                        case 'pairing'      :   $.mobile.pageContainer.pagecontainer("change", "pairing.html");
+                                                break;
+                        case 'paging'       :   $.mobile.pageContainer.pagecontainer("change", "paging.html");
+                                                break;
+                        case 'unpairing'    :   $.mobile.pageContainer.pagecontainer("change", "unpairing.html");
+                                                break;
+                        default             :   $.mobile.pageContainer.pagecontainer("change", "pairing.html");
+                                                break;
+                    }
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -102,9 +111,12 @@ $( document ).delegate("#unpairing", "pageinit", function() {
 $( document ).delegate("#unpairing", "pageshow", function() {
     //show unpair all button only for admin users
     if (user.role === 'admin') {
+        $('#get_crankcase_div').show();
         $('#unpair_all_button').show();
+
     }
     else {
+        $('#get_crankcase_div').hide();
         $('#unpair_all_button').hide();    
     }
 });
@@ -151,6 +163,10 @@ function registerPairingPageFunctions() {
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
+    $('#pairing_crank_case').blur(function(){
+        var inputCc = $('#pairing_crank_case').val();
+        $('#pairing_crank_case').val(inputCc.slice(0, CC_LENGTH));
+    });    
     loadLeftPanel('pairing');
     
     $('#pair_button').click(function(event) {
@@ -231,6 +247,11 @@ function registerPagingPageFunctions(){
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
+    $('#paging_crank_case').blur(function(){
+        var inputCc = $('#paging_crank_case').val();
+        $('#paging_crank_case').val(inputCc.slice(0, CC_LENGTH));
+    });
+
     //hide the pager form fields and the other related buttons (page and unpair) initially
     $('#paging_pager_div').hide();
     $('#custom_fieldset_buttons').hide();
@@ -308,16 +329,18 @@ function registerPagingPageFunctions(){
                 console.log(result);
                 
                 if (result.data && result.data.beeper) {
-                    $('#paging_pager_div').show();
-                    $('#custom_fieldset_buttons').show();
-                    $('#paging_pager').val(result.data.beeper);
+                    //$('#paging_pager_div').show();
+                    //$('#custom_fieldset_buttons').show();
+                    //$('#paging_pager').val(result.data.beeper);
                 }
                 if (!result.status) {
                     $("#paging_crank_case").focus(function () { this.setSelectionRange(0, 9999); return false; } ).mouseup( function () { return false; });
                     showMessage(result.message);
                 } 
                 else {
-                    showMessage(result.message, 'green');
+                    var message = 'Beeper ' + result.data.beeper + ' paged successfully';
+                    showMessage(message, 'green');
+                    $("#paging_crank_case").val('');
                 }
                 $('#paging_crank_case').focus();
             },
@@ -405,6 +428,10 @@ function registerUnpairingPageFunctions(){
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
+    $('#unpairing_crank_case').blur(function(){
+        var inputCc = $('#unpairing_crank_case').val();
+        $('#unpairing_crank_case').val(inputCc.slice(0, CC_LENGTH));
+    });        
     loadLeftPanel('unpairing');
     
     //hide the unpair button initially
@@ -468,7 +495,7 @@ function registerUnpairingPageFunctions(){
         }
         var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
         console.log(urlDetails.domain);
-        var loginUrl = urlDetails.domain + '/get_pager/' + $('#unpairing_crank_case').val();
+        var loginUrl = urlDetails.domain + '/page';
         console.log('crank case :' + $('#unpairing_crank_case').val());
         $.ajax({
             url: loginUrl,  
@@ -487,14 +514,10 @@ function registerUnpairingPageFunctions(){
                     $('#unpair_unpair_button').show();
                     $('#unpairing_pager').val(result.data.beeper);
                 }
-                if (!result.status) {
-                    $("#unpairing_crank_case").focus(function () { this.setSelectionRange(0, 9999); return false; } ).mouseup( function () { return false; });
-                    showMessage(result.message);
-                } 
-                else {
-                    showMessage(result.message, 'green');
-                }
-                $('#unpairing_crank_case').focus();
+                var messageColor = result.status ? 'green' : 'red';
+                showMessage(result.message, messageColor);
+                $("#unpairing_crank_case").focus(function () { this.setSelectionRange(0, 9999); return false; } ).mouseup( function () { return false; });
+                $("#unpairing_crank_case").focus();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -547,7 +570,7 @@ function registerUnpairingPageFunctions(){
                     console.log(result);
                     showMessage(result.message);
                 } 
-                $('#unpairing_pager').focus();
+                $('#unpairing_crank_case').focus();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus);
@@ -615,7 +638,7 @@ function registerUnpairingPageFunctions(){
         $('#unpairing_crank_case').val('');
         $('#unpairing_pager').val('');
         $('#unpair_unpair_button').hide();
-        $('#unpairing_pager').focus();
+        $("#unpairing_crank_case").focus();
     });
     
 }
@@ -1130,6 +1153,11 @@ function loadLeftPanel(containerID) {
             if (user.role === 'regular' && user.screen === 'paging') {
                 $(pageID + ' [data-role=panel]  #pairing_page').remove();
                 $(pageID + ' [data-role=panel]  #unpairing_page').remove();
+                $(pageID + ' [data-role=panel]  #pairs_report_page').remove();
+            }
+            if (user.role === 'regular' && user.screen === 'unpairing') {
+                $(pageID + ' [data-role=panel]  #paging_page').remove();
+                $(pageID + ' [data-role=panel]  #pairing_page').remove();
                 $(pageID + ' [data-role=panel]  #pairs_report_page').remove();
             }
         }, 'html');

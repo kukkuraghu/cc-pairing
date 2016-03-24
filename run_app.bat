@@ -1,5 +1,3 @@
-cd C:\Users\raghu\Documents\Comorin\RE Project\Development
-start/min  start_db.bat
 set NODE_ENV=development
 set debug=example-server
 REM
@@ -21,6 +19,5 @@ set transmitter_port=30090
 set transmitter_capCode=039
 
 REM CC_LENGTH is given a positive integer value, for all crank case fetching, only the first CC_LENGTH characters are considered.
-set CC_LENGTH=14
+set CC_LENGTH=5
 node bin/www
-
