@@ -59,16 +59,7 @@ function registerLoginPageFunctions() {
                     user.plant = result.data.plant;
                     user.screen = result.data.screen || 'pairing';//if the default screen is available, use that otherwise make pairing as the default screeen.
                     localStorage.setItem("user_detail", JSON.stringify(user));
-                    switch (user.screen) {
-                        case 'pairing'      :   $.mobile.pageContainer.pagecontainer("change", "pairing.html");
-                                                break;
-                        case 'paging'       :   $.mobile.pageContainer.pagecontainer("change", "paging.html");
-                                                break;
-                        case 'unpairing'    :   $.mobile.pageContainer.pagecontainer("change", "unpairing.html");
-                                                break;
-                        default             :   $.mobile.pageContainer.pagecontainer("change", "pairing.html");
-                                                break;
-                    }
+                    showDefaultScreen(user.screen);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -86,7 +77,7 @@ function registerLoginPageFunctions() {
 }
 $( document ).delegate("#first_page", "pagebeforeshow", function() {
     if (userLoggedIn) {
-        (user.screen === 'pairing') ? $.mobile.pageContainer.pagecontainer("change", "pairing.html") : $.mobile.pageContainer.pagecontainer("change", "paging.html");
+        showDefaultScreen(user.screen);
     }
     else {
         $.mobile.pageContainer.pagecontainer("change", "login.html");
@@ -1213,4 +1204,16 @@ function valid_beeper(input_beeper) {
     if (input_beeper.search(/^\d{4}$/) === -1) return false; //beeper id can have only 4 digits
     if (input_beeper.search(/0000/) === 0) return false;//beeper id can not be 0000
     return true;
+}
+function showDefaultScreen(screen) {
+    switch (screen) {
+        case 'pairing'      :   $.mobile.pageContainer.pagecontainer("change", "pairing.html");
+                                break;
+        case 'paging'       :   $.mobile.pageContainer.pagecontainer("change", "paging.html");
+                                break;
+        case 'unpairing'    :   $.mobile.pageContainer.pagecontainer("change", "unpairing.html");
+                                break;
+        default             :   $.mobile.pageContainer.pagecontainer("change", "pairing.html");
+                                break;
+    }
 }
