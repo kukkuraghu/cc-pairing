@@ -23,3 +23,5 @@ set transmitter_capCode=039
 REM CC_LENGTH is given a positive integer value, for all crank case fetching, only the first CC_LENGTH characters are considered.
 set CC_LENGTH=5
 node bin/www
+cd "C:\Users\raghu\Documents\Comorin\RE Project\Experiment\nw-test"
+"C:\node-webkit\nwjs-sdk-v0.13.0-rc3-win-x64\nw.exe"

@@ -1183,6 +1183,6 @@ function userLoggedIn() {
 //returns false if it is not a valid beeper id otherwise returns true
 function valid_beeper(input_beeper) {
     if (input_beeper.search(/^\d{4}$/) === -1) return false; //beeper id can have only 4 digits
-    if (input_beeper.search(/0000/) === 0) return false;/beeper id can not be 0000
+    if (input_beeper.search(/0000/) === 0) return false;//beeper id can not be 0000
     return true;
 }
