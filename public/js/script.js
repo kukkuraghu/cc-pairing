@@ -101,11 +101,11 @@ $( document ).delegate("#unpairing", "pageinit", function() {
 });
 $( document ).delegate("#unpairing", "pageshow", function() {
     //show unpair all button only for admin users
-    if (user.role !== 'admin') {
-        $('#unpair_all_button').hide();    
+    if (user.role === 'admin') {
+        $('#unpair_all_button').show();
     }
     else {
-        $('#unpair_all_button').show();
+        $('#unpair_all_button').hide();    
     }
 });
 
@@ -484,7 +484,7 @@ function registerUnpairingPageFunctions(){
             success: function (result) {
                 console.log(result);
                 if (result.data && result.data.beeper) {
-                    $('#unpair_button').show();
+                    $('#unpair_unpair_button').show();
                     $('#unpairing_pager').val(result.data.beeper);
                 }
                 if (!result.status) {
@@ -614,7 +614,7 @@ function registerUnpairingPageFunctions(){
         hideMessage();
         $('#unpairing_crank_case').val('');
         $('#unpairing_pager').val('');
-        $('#unpair_button').hide();
+        $('#unpair_unpair_button').hide();
         $('#unpairing_pager').focus();
     });
     
@@ -1182,9 +1182,7 @@ function userLoggedIn() {
 //Checks whether the input_beeper is a valid beeper id 
 //returns false if it is not a valid beeper id otherwise returns true
 function valid_beeper(input_beeper) {
-    if (input_beeper.length !== 4)  return false; //beeper ID length should be 4
-    var beeper = parseInt(input_beeper);//parse the integer from the input string
-    if (isNaN(beeper)) return false;//if not a number, it is not valid beeper ID
-    if (beeper > 9999 || beeper < 1) return false; //A valid beeper ID is a 4 digit non zero number
+    if (input_beeper.search(/^\d{4}$/) === -1) return false; //beeper id can have only 4 digits
+    if (input_beeper.search(/0000/) === 0) return false;/beeper id can not be 0000
     return true;
 }
