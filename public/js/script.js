@@ -70,6 +70,14 @@ function registerLoginPageFunctions() {
             }
         });         
     });
+    
+    $('#login_cancel_button').click(function(event) {
+        event.preventDefault();
+        $('#user_name').val('');
+        $('#password').val('');
+        $('#user_name').focus();
+    });
+
 //hide error message when any of the form fields is modified
     $('#login_form').on('input', function() {
         hideMessage();
