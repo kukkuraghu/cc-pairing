@@ -84,7 +84,7 @@ function registerLoginPageFunctions() {
     });
 }
 $( document ).delegate("#first_page", "pagebeforeshow", function() {
-    if (userLoggedIn) {
+    if (userLoggedIn()) {
         showDefaultScreen(user.screen);
     }
     else {
@@ -92,50 +92,54 @@ $( document ).delegate("#first_page", "pagebeforeshow", function() {
     }
 });
 
-$( document ).delegate("#login", "pageinit", function() {
+$( document ).delegate("#login", "pageshow", function() {
   registerLoginPageFunctions();
 });
 
-$( document ).delegate("#pairing", "pageinit", function() {
+$( document ).delegate("#pairing", "pageshow", function() {
   registerPairingPageFunctions();
 });
 
-$( document ).delegate("#paging", "pageinit", function() {
+
+$( document ).delegate("#paging", "pageshow", function() {
   registerPagingPageFunctions();
 });
 
-$( document ).delegate("#unpairing", "pageinit", function() {
+$( document ).delegate("#unpairing", "pageshow", function() {
   registerUnpairingPageFunctions();
 });
+/*
 $( document ).delegate("#unpairing", "pageshow", function() {
     //show unpair all button only for admin users
     if (user.role === 'admin') {
+        $('#unpairing_pager_grid').show();
+        $('#unpairing_pager').prop('disabled', false);
         $('#get_crankcase_div').show();
         $('#unpair_all_button').show();
-
+        $('#unpairing_pager').parent('div').removeClass('ui-state-disabled');
     }
     else {
         $('#get_crankcase_div').hide();
         $('#unpair_all_button').hide();    
     }
 });
-
-$( document ).delegate("#maintenance", "pageinit", function() {
+*/
+$( document ).delegate("#maintenance", "pageshow", function() {
   registerMaintenancePageFunctions();
 });
-$( document ).delegate("#change_password", "pageinit", function() {
+$( document ).delegate("#change_password", "pageshow", function() {
   registerChangePasswordPageFunctions();
 });
-$( document ).delegate("#add_user", "pageinit", function() {
+$( document ).delegate("#add_user", "pageshow", function() {
   registerAddUserPageFunctions();
 });
-$( document ).delegate("#modify_user", "pageinit", function() {
+$( document ).delegate("#modify_user", "pageshow", function() {
   registerModifyUserPageFunctions();
 });
-$( document ).delegate("#list_users", "pagebeforeshow", function() {
+$( document ).delegate("#list_users", "pageshow", function() {
   registerListUsersPageFunctions();
 });
-$( document ).delegate("#pairs_report", "pagebeforeshow", function() {
+$( document ).delegate("#pairs_report", "pageshow", function() {
   registerPairsReportPageFunctions();
 });
 $( document ).delegate("#logout", "click", function() {
@@ -163,8 +167,19 @@ function registerPairingPageFunctions() {
         return false;
     }
     $('#pairing_crank_case').blur(function(){
+        console.log('crank case field blurred');
         var inputCc = $('#pairing_crank_case').val();
         $('#pairing_crank_case').val(inputCc.slice(0, CC_LENGTH));
+    });    
+    $('#pairing_crank_case').focusout(function(){
+        console.log('crank case field focus is out');
+        //var inputCc = $('#pairing_crank_case').val();
+        //$('#pairing_crank_case').val(inputCc.slice(0, CC_LENGTH));
+    });    
+    $('#pairing_crank_case').focusin(function(){
+        console.log('crank case field focus is in');
+        //var inputCc = $('#pairing_crank_case').val();
+        //$('#pairing_crank_case').val(inputCc.slice(0, CC_LENGTH));
     });    
     loadLeftPanel('pairing');
     
@@ -328,9 +343,9 @@ function registerPagingPageFunctions(){
                 console.log(result);
                 
                 if (result.data && result.data.beeper) {
-                    //$('#paging_pager_div').show();
-                    //$('#custom_fieldset_buttons').show();
-                    //$('#paging_pager').val(result.data.beeper);
+                    $('#paging_pager_div').show();
+                    $('#custom_fieldset_buttons').show();
+                    $('#paging_pager').val(result.data.beeper);
                 }
                 if (!result.status) {
                     $("#paging_crank_case").focus(function () { this.setSelectionRange(0, 9999); return false; } ).mouseup( function () { return false; });
@@ -339,8 +354,9 @@ function registerPagingPageFunctions(){
                 else {
                     var message = 'Beeper ' + result.data.beeper + ' paged successfully';
                     showMessage(message, 'green');
-                    $("#paging_crank_case").val('');
+                    //$("#paging_crank_case").val('');
                 }
+                $("#paging_crank_case").focus(function () { this.setSelectionRange(0, 9999); return false; } ).mouseup( function () { return false; });
                 $('#paging_crank_case').focus();
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -427,6 +443,17 @@ function registerUnpairingPageFunctions(){
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
+    if (user.role === 'admin') {
+        $('#unpairing_pager_grid').show();
+        $('#unpairing_pager').prop('disabled', false);
+        $('#get_crankcase_div').show();
+        $('#unpair_all_button').show();
+        $('#unpairing_pager').parent('div').removeClass('ui-state-disabled');
+    }
+    else {
+        $('#get_crankcase_div').hide();
+        $('#unpair_all_button').hide();    
+    }
     $('#unpairing_crank_case').blur(function(){
         var inputCc = $('#unpairing_crank_case').val();
         $('#unpairing_crank_case').val(inputCc.slice(0, CC_LENGTH));
@@ -510,6 +537,7 @@ function registerUnpairingPageFunctions(){
             success: function (result) {
                 console.log(result);
                 if (result.data && result.data.beeper) {
+                    $('#unpairing_pager_grid').show();
                     $('#unpair_unpair_button').show();
                     $('#unpairing_pager').val(result.data.beeper);
                 }
@@ -1140,6 +1168,12 @@ function registerPairsReportPageFunctions() {
         });         
 }
 function loadLeftPanel(containerID) {
+    console.log('starting the loadLeftPanel');
+    
+    //loading the panel causes the current active element to loose focus
+    //so identify the element which is focused before loading the panel
+    //once the panel is loaded, get the focus to that element
+    var focusedElement = $(':focus');
     $.get('left-panel.html', function(data) { 
             console.log('loading left-panel.html');
             var pageID = '#' + containerID;
@@ -1159,6 +1193,9 @@ function loadLeftPanel(containerID) {
                 $(pageID + ' [data-role=panel]  #pairing_page').remove();
                 $(pageID + ' [data-role=panel]  #pairs_report_page').remove();
             }
+            console.log('left panel loaded');
+            //get the focus to the element which had the focus before loading the panel
+            focusedElement.focus();
         }, 'html');
 }
 
