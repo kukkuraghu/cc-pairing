@@ -166,22 +166,12 @@ function registerPairingPageFunctions() {
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
+    ensureInputGetFocus('pairing');
     $('#pairing_crank_case').blur(function(){
-        console.log('crank case field blurred');
         var inputCc = $('#pairing_crank_case').val();
         $('#pairing_crank_case').val(inputCc.slice(0, CC_LENGTH));
     });    
-    $('#pairing_crank_case').focusout(function(){
-        console.log('crank case field focus is out');
-        //var inputCc = $('#pairing_crank_case').val();
-        //$('#pairing_crank_case').val(inputCc.slice(0, CC_LENGTH));
-    });    
-    $('#pairing_crank_case').focusin(function(){
-        console.log('crank case field focus is in');
-        //var inputCc = $('#pairing_crank_case').val();
-        //$('#pairing_crank_case').val(inputCc.slice(0, CC_LENGTH));
-    });    
-    loadLeftPanel('pairing');
+    formatLeftPanel('pairing');
     
     $('#pair_button').click(function(event) {
         event.preventDefault();
@@ -261,6 +251,7 @@ function registerPagingPageFunctions(){
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
+    ensureInputGetFocus('paging');
     $('#paging_crank_case').blur(function(){
         var inputCc = $('#paging_crank_case').val();
         $('#paging_crank_case').val(inputCc.slice(0, CC_LENGTH));
@@ -269,7 +260,7 @@ function registerPagingPageFunctions(){
     //hide the pager form fields and the other related buttons (page and unpair) initially
     $('#paging_pager_div').hide();
     $('#custom_fieldset_buttons').hide();
-    loadLeftPanel('paging');
+    formatLeftPanel('paging');
     $('#page_button').click(function(event) {
         event.preventDefault();
         hideMessage();   
@@ -443,6 +434,7 @@ function registerUnpairingPageFunctions(){
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
+    ensureInputGetFocus('unpairing');
     if (user.role === 'admin') {
         $('#unpairing_pager_grid').show();
         $('#unpairing_pager').prop('disabled', false);
@@ -458,7 +450,7 @@ function registerUnpairingPageFunctions(){
         var inputCc = $('#unpairing_crank_case').val();
         $('#unpairing_crank_case').val(inputCc.slice(0, CC_LENGTH));
     });        
-    loadLeftPanel('unpairing');
+    formatLeftPanel('unpairing');
     
     //hide the unpair button initially
     $('#unpair_unpair_button').hide();
@@ -677,7 +669,7 @@ function registerMaintenancePageFunctions() {
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
-    loadLeftPanel('maintenance');
+    formatLeftPanel('maintenance');
 
     //modify user and add user options are availabe for admin only
     if (user.role !== 'admin') {
@@ -713,7 +705,7 @@ function registerChangePasswordPageFunctions() {
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
-    loadLeftPanel('change_password');
+    formatLeftPanel('change_password');
     $('#cp_username').val(user.username);
     
     $('#cp_button').click(function(event) {
@@ -797,7 +789,7 @@ function registerAddUserPageFunctions() {
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
-    loadLeftPanel('add_user');
+    formatLeftPanel('add_user');
     
     $('#au_add_button').click(function(event) {
         event.preventDefault();
@@ -878,7 +870,7 @@ function registerModifyUserPageFunctions() {
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         //return false;
     }
-    loadLeftPanel('modify_user');
+    formatLeftPanel('modify_user');
     
     $('#get_user_detail_button').click(function(event) {
         event.preventDefault();
@@ -1065,7 +1057,7 @@ function registerListUsersPageFunctions() {
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
-    loadLeftPanel('list_users');
+    formatLeftPanel('list_users');
     var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
     var loginUrl = urlDetails.domain + '/get_users';
     console.log(loginUrl);
@@ -1121,7 +1113,7 @@ function registerPairsReportPageFunctions() {
         $.mobile.pageContainer.pagecontainer("change", "login.html");
         return false;
     }
-    loadLeftPanel('pairs_report');
+    formatLeftPanel('pairs_report');
     var urlDetails = $.mobile.path.parseUrl($.mobile.path.getDocumentBase());
     var loginUrl = urlDetails.domain + '/get_pairs';
     console.log(loginUrl);
@@ -1199,6 +1191,25 @@ function loadLeftPanel(containerID) {
         }, 'html');
 }
 
+function formatLeftPanel(containerID) {
+    console.log('starting the formatLeftPanel');
+    var pageID = '#' + containerID;
+    $(pageID + ' [data-role=panel] li').filter(pageID + '_page').remove();
+    if (user.role === 'regular' && user.screen === 'pairing') {
+                $(pageID + ' [data-role=panel]  #paging_page').remove();
+    }
+    if (user.role === 'regular' && user.screen === 'paging') {
+        $(pageID + ' [data-role=panel]  #pairing_page').remove();
+        $(pageID + ' [data-role=panel]  #unpairing_page').remove();
+        $(pageID + ' [data-role=panel]  #pairs_report_page').remove();
+    }
+    if (user.role === 'regular' && user.screen === 'unpairing') {
+        $(pageID + ' [data-role=panel]  #paging_page').remove();
+        $(pageID + ' [data-role=panel]  #pairing_page').remove();
+        $(pageID + ' [data-role=panel]  #pairs_report_page').remove();
+    }
+}
+
 function showMessage(errorMessage, color){
     color = color || 'red';
     var currentPage = $.mobile.pageContainer.pagecontainer('getActivePage');
@@ -1261,4 +1272,18 @@ function showDefaultScreen(screen) {
         default             :   $.mobile.pageContainer.pagecontainer("change", "pairing.html");
                                 break;
     }
+}
+
+//This function ensures that any click on the page (other than on INPUT AND BUTTON), 
+//won't take away the focus from input fields and buttons.
+function ensureInputGetFocus(page) {
+    var inputElementLastFocused = '';
+    $('input, button').focusout(function(event){
+        inputElementLastFocused = event.target;
+    });
+    $('#' + page).click(function(event){
+        if  (event.target.nodeName !== 'INPUT' && event.target.nodeName !== 'BUTTON') {
+            $(inputElementLastFocused).focus();
+        }
+    });
 }
