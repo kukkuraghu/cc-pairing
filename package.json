@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "populateDb" : "echo \"Make sure mongod is running\" && node ./bin/populate_db",
     "start": "node ./bin/www"
   },
   "author": "Raghunath Nedumpurath",

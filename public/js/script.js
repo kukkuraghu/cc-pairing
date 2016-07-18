@@ -57,7 +57,7 @@ function registerLoginPageFunctions() {
                     user.username = result.data.username;
                     user.role = result.data.role;
                     user.plant = result.data.plant;
-                    user.screen = result.data.screen || 'pairing';//if the default screen is available, use that otherwise make pairing as the default screeen.
+                    user.screen = result.data.screen || 'pairing';//if the default screen is available, use that otherwise make pairing as the default screen.
                     localStorage.setItem("user_detail", JSON.stringify(user));
                     showDefaultScreen(user.screen);
                 }

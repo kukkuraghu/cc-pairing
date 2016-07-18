@@ -1,44 +1,27 @@
 'use strict';
 var async = require('async');
-var debug = require('debug')('example-server');
+var debug = require('debug')('ccpairing:populateDb');
 var mongoose = require('mongoose');
 var path = require('path');
-var db = require(path.join(process.cwd() + '/../lib/') + 'connections');
-//require('../models/users'); 
-//require('../models/pairs');
+var db = require(path.join('./../lib/connections'));
 var Users = mongoose.model('Users');
 var Pairs = mongoose.model('Pairs');
 
 var data = {
     users : [
         {
-            username    : 'john',
-            password    : 'test',
-            role        : 'regular',
-            plant       : 'workshop'
-        },
-        {
-            username    : 'raju',
-            password    : 'test1',
+            username    : 'admin',
+            password    : 'admin',
             role        : 'admin',
-            plant       : 'corporate'
+            plant       : 'manager',
+            screen      : 'pairing'
         },
         {
-            username    : 'arun',
-            password    : 'test2',
+            username    : 'user1',
+            password    : 'user1',
             role        : 'regular',
-            plant       : 'workshop'
-        }        
-    ],
-    pairs : [
-        {
-            crankCase   : '10001',
-            beeper      : '1001'
-        },
-        {
-            crankCase   : '10002',
-            beeper      : '1002'
-        }        
+            plant       : 'corporate'
+        }
     ]
 };
 
@@ -72,7 +55,8 @@ var deletePairs =  function(callback) {
         console.info('Done deleting pairs');
         callback(null, 'Done deleting pairs');
     });
-}
+};
+/*
 var addPairs =  function(callback) {
     console.log('Adding Pairs');
     Pairs.create(data.pairs, function(error, response){
@@ -83,15 +67,22 @@ var addPairs =  function(callback) {
         callback(null, 'Done adding Pairs');
     });
 };
+*/
 
-
-async.series([deleteUsers, deletePairs, addUsers, addPairs], function(error, results){
-    if (error){
-            console.error('Error ' + error);
-    }
-    mongoose.connection.close();
-    console.log('All done');
-    for (var i in results) {
-        debug(results[i]);
-    }
-});
+var cleanAndPopulateDb = function() {
+    debug("inside cleanAndPopulateDb");
+    async.series([deleteUsers, deletePairs, addUsers], function(error, results){
+        console.log(results);
+        if (error){
+                console.error('Error ' + error);
+        }
+        mongoose.connection.close();
+        console.log('All done');
+        for (var i in results) {
+            debug(results[i]);
+        }
+    });
+};
+cleanAndPopulateDb();
+//setImmediate(cleanAndPopulateDb);
+//setTimeout(cleanAndPopulateDb,10000);
